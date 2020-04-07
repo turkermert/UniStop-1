@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "890727424993",
+    "firebase_url": "https://unistoptt.firebaseio.com",
+    "project_id": "unistoptt",
+    "storage_bucket": "unistoptt.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890727424993:android:db9c82216e020de16e28a0",
+        "android_client_info": {
+          "package_name": "com.atakan.unistop_tt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "890727424993-m3oplomjvit54bontc5db9s9ico7h8lj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.atakan.unistop_tt",
+            "certificate_hash": "3b6e1ee6d759c27f9e9a5ceefac67e74ea310b0e"
+          }
+        },
+        {
+          "client_id": "890727424993-st06s08qhc6ark18ja505iljohmfatv4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxuYV9_uHJVRrFTppYKxnRAGEy4t38liE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "890727424993-st06s08qhc6ark18ja505iljohmfatv4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
