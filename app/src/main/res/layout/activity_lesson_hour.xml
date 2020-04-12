@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Select lesson hours"
+        android:textColor="@color/colorAccent"
+        android:layout_marginTop="100dp"
+        android:textSize="25sp"/>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_marginTop="100dp">
+
+        <View
+            android:layout_height="5dp"
+            android:background="@color/colorPrimary"
+            android:layout_marginBottom="10dp"/>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Departure"
+                android:layout_column="1"
+                android:textSize="25sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="Return"
+                android:layout_column="2"
+                android:textSize="25sp"/>
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/rowMonday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="50dp"
+                android:text="Monday"
+                android:textSize="25sp" />
+
+            <Spinner
+                android:id="@+id/mondayDep"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/times"
+                style="@style/Widget.AppCompat.TextView.SpinnerItem"/>
+
+            <Spinner
+                android:id="@+id/mondayRet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/times"/>
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/rowTuesday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="50dp"
+                android:text="Tuesday"
+                android:textSize="25sp" />
+
+            <Spinner
+                android:id="@+id/tuesdayDep"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/times"/>
+            <Spinner
+                android:id="@+id/tuesdayRet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/times" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/rowWednesday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="50dp"
+                android:text="Wednesday"
+                android:textSize="25sp" />
+
+            <Spinner
+                android:id="@+id/wednesdayDep"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/times"/>
+            <Spinner
+                android:id="@+id/wednesdayRet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/times"/>
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/rowThursday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="50dp"
+                android:text="Thursday"
+                android:textSize="25sp" />
+
+            <Spinner
+                android:id="@+id/thursdayDep"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/times"/>
+            <Spinner
+                android:id="@+id/thursdayRet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/times"/>
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/rowFriday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="50dp"
+                android:text="Friday"
+                android:textSize="25sp" />
+
+            <Spinner
+                android:id="@+id/fridayDep"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/times"/>
+            <Spinner
+                android:id="@+id/fridayRet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/times"/>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/times_next"
+                android:text="Next"
+                android:textSize="17sp"
+                android:layout_column="2"
+                android:textColor="@color/cardview_light_background"
+                style="@style/Widget.AppCompat.Button.Colored">
+            </Button>
+        </TableRow>
+    </TableLayout>
+</RelativeLayout>
