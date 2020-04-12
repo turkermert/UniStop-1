@@ -36,6 +36,8 @@ public class LoginActivity extends AppCompatActivity {
     //Declare an instance of FirebaseAuth
     private FirebaseAuth mAuth;
 
+    FirebaseUser user;
+
     //progress dialog
     ProgressDialog progressDialog;
 
@@ -50,8 +52,9 @@ public class LoginActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        // Initialize Firebase Auth
+        // Initialize Firebase
         mAuth = FirebaseAuth.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         //init
         mEmailEt = findViewById(R.id.emailEt);
@@ -179,11 +182,12 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             //dismiss progress dialog
                             progressDialog.dismiss();
+
                             // Sign in success, update UI with the signed-in user's information
                             //Go to other page
-                            FirebaseUser user = mAuth.getCurrentUser();
                             startActivity(new Intent(context, DashboardActivity.class));
                             finish();
+
                         } else {
                             //dismiss progress dialog
                             progressDialog.dismiss();

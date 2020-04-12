@@ -132,7 +132,9 @@ public class ProfileFragment extends Fragment {
 
                     //set data
                     nameTv.setText(name);
-                    emailTv.setText(email);
+                    String realName=TextUtils.split(email,"@")[0].split("\\.")[1];       //wite name and surname automatically
+                    String realSurname=TextUtils.split(email,"@")[0].split("\\.")[0];
+                    emailTv.setText(email+"\n"+realName.substring(0, 1).toUpperCase()+ realName.substring(1)+" "+realSurname.substring(0, 1).toUpperCase()+ realSurname.substring(1));
                     phoneTv.setText(phone);
                     try {
                         //if image is received then set
@@ -194,7 +196,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 //handle dialog item clicks
                 if (i == 0) {
-                    //Edit Profile clicked
+                    //Edit Profile photo clicked
                     progressDialog.setMessage("Updating Profile Picture");
                     showImagePicDialog();
                 } else if (i == 1) {

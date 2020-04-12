@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -39,6 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     //Declare an instance of FirebaseAuth
     private FirebaseAuth mAuth;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,15 @@ public class RegisterActivity extends AppCompatActivity {
                     mPasswordEt.setError("Password length at least 8 characters");
                     mPasswordEt.setFocusable(true);
                 }
+
+                //atılım email check condition
+                /*
+                else if(!TextUtils.split(email,"@")[1].equals("student.atilim.edu.tr")){
+
+                    Toast.makeText(getApplicationContext(), "Sadece Atılım e-mail geçerlidir.", Toast.LENGTH_LONG).show();
+                    return;
+                }*/
+
                 else{
                     //register the user, write it db with registerUser method
                     registerUser(email, password);
@@ -117,6 +128,10 @@ public class RegisterActivity extends AppCompatActivity {
                             //get user email and uid from auth
                             String email = user.getEmail();
                             String uid = user.getUid();
+
+                            //send email authontication
+                            sendEmail();
+
                             //using hashmap
                             HashMap<Object, String> hashMap = new HashMap<>();
                             //put info in hashmap
@@ -125,6 +140,7 @@ public class RegisterActivity extends AppCompatActivity {
                             hashMap.put("name", ""); //will add later
                             hashMap.put("phone", "");
                             hashMap.put("image", "");
+                            hashMap.put("usertype", "");
                             //Firabase database instance
                             FirebaseDatabase database = FirebaseDatabase.getInstance();
                             //path to store user data named "Users"
@@ -134,7 +150,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                             Toast.makeText(context, "Registered...\n"+user.getEmail(), Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(context, DashboardActivity.class));
+                            startActivity(new Intent(context, LoginAfterRegisterActivity.class));
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.
@@ -152,6 +168,20 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
     }
+
+    //send email authontication method
+    private void sendEmail(){
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null){
+            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful()){
+                        Toast.makeText(context,"check email for verification",Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }}
 
     @Override
     public boolean onSupportNavigateUp() {
