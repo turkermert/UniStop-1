@@ -2,9 +2,10 @@ package com.atakan.unistop_tt;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,9 +15,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.HashMap;
-
-public class LessonhourActivity extends AppCompatActivity /*implements View.OnClickListener*/ {
+public class LessonhourActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     Spinner mondayDep, tuesdayDep, wednesdayDep, thursdayDep, fridayDep, mondayRet, tuesdayRet, wednesdayRet, thursdayRet, fridayRet;
     Button timesNext;
@@ -26,19 +25,28 @@ public class LessonhourActivity extends AppCompatActivity /*implements View.OnCl
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
 
-    TextView textdeneme;
-
+    String lesson_time_mondayDep, lesson_time_tuesdayDep, lesson_time_wednesdayDep,
+            lesson_time_thursdayDep, lesson_time_fridayDep, lesson_time_mondayRet,
+            lesson_time_tuesdayRet, lesson_time_wednesdayRet, lesson_time_thursdayRet,
+            lesson_time_fridayRet;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson_hour);
 
+        //init firebase
+        firebaseAuth = FirebaseAuth.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("LessonHours");
+
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.times, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         mondayDep = findViewById(R.id.mondayDep);
-        final String mondayDepS = mondayDep.getSelectedItem().toString();
-
-        textdeneme = findViewById(R.id.textdeneme);
-
         tuesdayDep = findViewById(R.id.tuesdayDep);
         wednesdayDep = findViewById(R.id.wednesdayDep);
         thursdayDep = findViewById(R.id.thursdayDep);
@@ -50,40 +58,66 @@ public class LessonhourActivity extends AppCompatActivity /*implements View.OnCl
         fridayRet = findViewById(R.id.fridayRet);
         timesNext = findViewById(R.id.times_next);
 
-        timesNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                textdeneme.setText(mondayDepS);
-            }
-        });
+        mondayDep.setAdapter(adapter);
+        tuesdayDep.setAdapter(adapter);
+        wednesdayDep.setAdapter(adapter);
+        thursdayDep.setAdapter(adapter);
+        fridayDep.setAdapter(adapter);
+        mondayRet.setAdapter(adapter);
+        tuesdayRet.setAdapter(adapter);
+        wednesdayRet.setAdapter(adapter);
+        thursdayRet.setAdapter(adapter);
+        fridayRet.setAdapter(adapter);
+
+        mondayDep.setOnItemSelectedListener(this);
+        tuesdayDep.setOnItemSelectedListener(this);
+        wednesdayDep.setOnItemSelectedListener(this);
+        thursdayDep.setOnItemSelectedListener(this);
+        fridayDep.setOnItemSelectedListener(this);
+        mondayRet.setOnItemSelectedListener(this);
+        tuesdayRet.setOnItemSelectedListener(this);
+        wednesdayRet.setOnItemSelectedListener(this);
+        thursdayRet.setOnItemSelectedListener(this);
+        fridayRet.setOnItemSelectedListener(this);
+
+
 
     }
 
-    /*@Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.mondayDep:{
-                fridayRet.
-                    enterLessonHours()
-                user = firebaseAuth.getCurrentUser();
-                //get user email and uid from auth
-                String uid = user.getUid();
-                //using hashmap
-                HashMap<Object, String> hashMap = new HashMap<>();
-                //put info in hashmap
-                hashMap.put("uid", uid);
-                hashMap.put("name", ""); //will add later
-                hashMap.put("phone", "");
-                hashMap.put("image", "");
-                hashMap.put("usertype", "");
-                //Firabase database instance
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                //path to store user data named "Users"
-                DatabaseReference reference = database.getReference("Users");
-                //put data within hashmap in db
-                reference.child(uid).setValue(hashMap);
-            }
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-        }
-    }*/
+        if (adapterView.getId() == R.id.mondayDep)
+            lesson_time_mondayDep = (String) adapterView.getItemAtPosition(i);
+        else if(adapterView.getId() == R.id.tuesdayDep)
+            lesson_time_tuesdayDep = (String) adapterView.getItemAtPosition(i);
+        else if(adapterView.getId() == R.id.wednesdayDep)
+            lesson_time_wednesdayDep = (String) adapterView.getItemAtPosition(i);
+        else if(adapterView.getId() == R.id.thursdayDep)
+            lesson_time_thursdayDep = (String) adapterView.getItemAtPosition(i);
+        else if(adapterView.getId() == R.id.fridayDep)
+            lesson_time_fridayDep = (String) adapterView.getItemAtPosition(i);
+        else if(adapterView.getId() == R.id.mondayRet)
+            lesson_time_mondayRet = (String) adapterView.getItemAtPosition(i);
+        else if(adapterView.getId() == R.id.tuesdayRet)
+            lesson_time_tuesdayRet = (String) adapterView.getItemAtPosition(i);
+        else if(adapterView.getId() == R.id.wednesdayRet)
+            lesson_time_wednesdayRet = (String) adapterView.getItemAtPosition(i);
+        else if(adapterView.getId() == R.id.thursdayRet)
+            lesson_time_thursdayRet = (String) adapterView.getItemAtPosition(i);
+        else if(adapterView.getId() == R.id.fridayRet)
+            lesson_time_fridayRet = (String) adapterView.getItemAtPosition(i);
+
+
+        LessonHours lessonHours = new LessonHours(user.getUid(), lesson_time_mondayDep, lesson_time_tuesdayDep,
+                lesson_time_wednesdayDep, lesson_time_thursdayDep, lesson_time_fridayDep, lesson_time_mondayRet,
+                lesson_time_tuesdayRet, lesson_time_wednesdayRet, lesson_time_thursdayRet, lesson_time_fridayRet);
+        databaseReference.child(user.getUid()).setValue(lessonHours);
+    }
+
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+    }
+
 }

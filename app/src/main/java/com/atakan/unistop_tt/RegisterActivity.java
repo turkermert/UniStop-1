@@ -129,8 +129,9 @@ public class RegisterActivity extends AppCompatActivity {
                             String email = user.getEmail();
                             String uid = user.getUid();
 
+                            /*
                             //send email authontication
-                            sendEmail();
+                            sendEmail();*/
 
                             //using hashmap
                             HashMap<Object, String> hashMap = new HashMap<>();
@@ -150,7 +151,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                             Toast.makeText(context, "Registered...\n"+user.getEmail(), Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(context, LoginAfterRegisterActivity.class));
+                            startActivity(new Intent(context, UsertypeActivity.class));
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.
@@ -169,6 +170,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+
+    /*
     //send email authontication method
     private void sendEmail(){
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -182,6 +185,9 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             });
         }}
+
+
+     */
 
     @Override
     public boolean onSupportNavigateUp() {

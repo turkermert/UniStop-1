@@ -63,7 +63,7 @@ public class UsertypeActivity extends AppCompatActivity {
 
                 databaseReference.child(user.getUid()).updateChildren(result);
 
-                startActivity(new Intent(context, DashboardActivity.class));
+                startActivity(new Intent(context, LessonhourActivity.class));
                 finish();
             }
         });
@@ -78,7 +78,7 @@ public class UsertypeActivity extends AppCompatActivity {
 
                 databaseReference.child(user.getUid()).updateChildren(result);
 
-                startActivity(new Intent(context, DashboardActivity.class));
+                startActivity(new Intent(context, LessonhourActivity.class));
                 finish();
             }
         });
