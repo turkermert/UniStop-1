@@ -132,9 +132,10 @@ public class ProfileFragment extends Fragment {
 
                     //set data
                     nameTv.setText(name);
-                    String realName=TextUtils.split(email,"@")[0].split("\\.")[1];       //wite name and surname automatically
+                    /*String realName=TextUtils.split(email,"@")[0].split("\\.")[1];       //wite name and surname automatically
                     String realSurname=TextUtils.split(email,"@")[0].split("\\.")[0];
-                    emailTv.setText(email+"\n"+realName.substring(0, 1).toUpperCase()+ realName.substring(1)+" "+realSurname.substring(0, 1).toUpperCase()+ realSurname.substring(1));
+                    emailTv.setText(email+"\n"+realName.substring(0, 1).toUpperCase()+ realName.substring(1)+" "+realSurname.substring(0, 1).toUpperCase()+ realSurname.substring(1));*/
+                    emailTv.setText(email);
                     phoneTv.setText(phone);
                     try {
                         //if image is received then set

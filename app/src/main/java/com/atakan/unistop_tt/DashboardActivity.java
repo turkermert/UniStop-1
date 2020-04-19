@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -69,7 +68,7 @@ public class DashboardActivity extends AppCompatActivity {
                 case R.id.nav_passengers:
                     //users fragment transaction
                     actionBar.setTitle("Passengers");
-                    PassengersFragment fragment3 = new PassengersFragment();
+                    UserFragment fragment3 = new UserFragment();
                     FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
                     ft3.replace(R.id.content, fragment3, "");
                     ft3.commit();

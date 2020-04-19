@@ -1,5 +1,7 @@
 package com.atakan.unistop_tt;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,6 +21,7 @@ public class LessonhourActivity extends AppCompatActivity implements AdapterView
 
     Spinner mondayDep, tuesdayDep, wednesdayDep, thursdayDep, fridayDep, mondayRet, tuesdayRet, wednesdayRet, thursdayRet, fridayRet;
     Button timesNext;
+    Context context = this;
 
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
@@ -80,6 +83,13 @@ public class LessonhourActivity extends AppCompatActivity implements AdapterView
         thursdayRet.setOnItemSelectedListener(this);
         fridayRet.setOnItemSelectedListener(this);
 
+        timesNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, DashboardActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
     }
