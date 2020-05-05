@@ -18,6 +18,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     //firebase auth
     FirebaseAuth firebaseAuth;
+
     ActionBar actionBar;
 
     @Override
@@ -65,13 +66,21 @@ public class DashboardActivity extends AppCompatActivity {
                     ft2.replace(R.id.content, fragment2, "");
                     ft2.commit();
                     return true;
-                case R.id.nav_passengers:
+                case R.id.nav_users:
                     //users fragment transaction
-                    actionBar.setTitle("Passengers");
+                    actionBar.setTitle("Users");
                     UserFragment fragment3 = new UserFragment();
                     FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
                     ft3.replace(R.id.content, fragment3, "");
                     ft3.commit();
+                    return true;
+                case R.id.nav_chat:
+                    //users fragment transaction
+                    actionBar.setTitle("Chats");
+                    ChatListFragment fragment4 = new ChatListFragment();
+                    FragmentTransaction ft4 = getSupportFragmentManager().beginTransaction();
+                    ft4.replace(R.id.content, fragment4, "");
+                    ft4.commit();
                     return true;
             }
 
@@ -107,23 +116,4 @@ public class DashboardActivity extends AppCompatActivity {
         super.onStart();
     }
 
-    //inflate options menu
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    //handle menu item click
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        //get item id
-        int id = item.getItemId();
-        if (id == R.id.action_logout){
-            firebaseAuth.signOut();
-            checkUserStatus();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

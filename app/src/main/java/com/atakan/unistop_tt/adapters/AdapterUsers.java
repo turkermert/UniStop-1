@@ -1,6 +1,7 @@
-package com.atakan.unistop_tt;
+package com.atakan.unistop_tt.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.atakan.unistop_tt.ChatActivity;
+import com.atakan.unistop_tt.R;
+import com.atakan.unistop_tt.models.ModelUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -38,6 +42,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyHolder myHolder, int position) {
         //get data
+        final String receiverUid = userList.get(position).getUid();
         String userImage = userList.get(position).getImage();
         String userName = userList.get(position).getName();
         String userType = userList.get(position).getUsertype();
@@ -56,7 +61,13 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
         myHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+                //click user from user list to start chatting
+                //later here will be changed with show clicked user's profile
+
+                //starts activity by putting Uid of receiver
+                Intent intent = new Intent(context, ChatActivity.class);
+                intent.putExtra("receiverUid", receiverUid);
+                context.startActivity(intent);
             }
         });
     }

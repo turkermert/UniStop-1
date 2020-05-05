@@ -142,6 +142,7 @@ public class RegisterActivity extends AppCompatActivity {
                             hashMap.put("phone", "");
                             hashMap.put("image", "");
                             hashMap.put("usertype", "");
+                            hashMap.put("district", "");
                             //Firabase database instance
                             FirebaseDatabase database = FirebaseDatabase.getInstance();
                             //path to store user data named "Users"

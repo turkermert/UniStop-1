@@ -1,20 +1,21 @@
-package com.atakan.unistop_tt;
+package com.atakan.unistop_tt.models;
 
 public class ModelUser {
 
     //use same name as in firebase db
-    String name, email, phone, image, usertype, uid;
+    String name, email, phone, image, usertype, uid, district;
 
     public ModelUser() {
     }
 
-    public ModelUser(String name, String email, String phone, String image, String usertype, String uid) {
+    public ModelUser(String name, String email, String phone, String image, String usertype, String uid, String district) {
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.image = image;
         this.usertype = usertype;
         this.uid = uid;
+        this.district = district;
     }
 
     public String getUid() {
@@ -63,5 +64,13 @@ public class ModelUser {
 
     public void setUsertype(String usertype) {
         this.usertype = usertype;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
     }
 }
