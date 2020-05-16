@@ -64,7 +64,7 @@ public class ProfileFragment extends Fragment {
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
+    DatabaseReference databaseReference, databaseReferenceLessonHours;
     //storage
     StorageReference storageReference;
     //path where images of user profile pic will be stored
@@ -72,7 +72,8 @@ public class ProfileFragment extends Fragment {
 
 
     ImageView avatarTv;
-    TextView nameTv, emailTv, phoneTv;
+    TextView nameTv, districtTv, addressTv, userTypeTv;
+    TextView mondayDepTv, tuesdayDepTv, wednesdayDepTv, thursdayDepTv, fridayDepTv, mondayRetTv, tuesdayRetTv, wednesdayRetTv, thursdayRetTv, fridayRetTv;
     FloatingActionButton fab;
 
     ProgressDialog progressDialog;
@@ -105,6 +106,7 @@ public class ProfileFragment extends Fragment {
         user = firebaseAuth.getCurrentUser();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Users");
+        databaseReferenceLessonHours = firebaseDatabase.getReference("LessonHours");
         storageReference = getInstance().getReference(); //firebase storage reference
 
         //init arrays of permissions
@@ -113,9 +115,21 @@ public class ProfileFragment extends Fragment {
 
         avatarTv = view.findViewById(R.id.avatarIv);
         nameTv = view.findViewById(R.id.nameTv);
-        emailTv = view.findViewById(R.id.emailTv);
-        phoneTv = view.findViewById(R.id.phoneTv);
+        districtTv = view.findViewById(R.id.districtTv);
+        addressTv = view.findViewById(R.id.addressTv);
+        userTypeTv = view.findViewById(R.id.userTypeTv);
         fab = view.findViewById(R.id.fab);
+
+        mondayDepTv = view.findViewById(R.id.mondayDepTv);
+        tuesdayDepTv = view.findViewById(R.id.tuesdayDepTv);
+        wednesdayDepTv = view.findViewById(R.id.wednesdayDepTv);
+        thursdayDepTv = view.findViewById(R.id.thursdayDepTv);
+        fridayDepTv = view.findViewById(R.id.fridayDepTv);
+        mondayRetTv = view.findViewById(R.id.mondayRetTv);
+        tuesdayRetTv = view.findViewById(R.id.tuesdayRetTv);
+        wednesdayRetTv = view.findViewById(R.id.wednesdayRetTv);
+        thursdayRetTv = view.findViewById(R.id.thursdayRetTv);
+        fridayRetTv = view.findViewById(R.id.fridayRetTv);
 
         //init progress dialog
         progressDialog = new ProgressDialog(getActivity());
@@ -129,17 +143,20 @@ public class ProfileFragment extends Fragment {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     //get data
                     String name = "" + ds.child("name").getValue();
-                    String email = "" + ds.child("email").getValue();
-                    String phone = "" + ds.child("phone").getValue();
+                    String district = "" + ds.child("district").getValue();
+                    String address = "" + ds.child("address").getValue();
+                    String userType = "" + ds.child("usertype").getValue();
                     String image = "" + ds.child("image").getValue();
 
                     //set data
                     nameTv.setText(name);
+                    districtTv.setText(district);
+                    addressTv.setText(address);
+                    userTypeTv.setText(userType);
                     /*String realName=TextUtils.split(email,"@")[0].split("\\.")[1];       //wite name and surname automatically
                     String realSurname=TextUtils.split(email,"@")[0].split("\\.")[0];
                     emailTv.setText(email+"\n"+realName.substring(0, 1).toUpperCase()+ realName.substring(1)+" "+realSurname.substring(0, 1).toUpperCase()+ realSurname.substring(1));*/
-                    emailTv.setText(email);
-                    phoneTv.setText(phone);
+
                     try {
                         //if image is received then set
                         Picasso.get().load(image).into(avatarTv);
@@ -147,6 +164,46 @@ public class ProfileFragment extends Fragment {
                         //if there is any exception while getting image then set default
                         Picasso.get().load(R.drawable.ic_add_image).into(avatarTv);
                     }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        Query query_lh= databaseReferenceLessonHours.orderByChild("uid").equalTo(user.getUid());
+        query_lh.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //check until required data get
+                for(DataSnapshot ds: dataSnapshot.getChildren()){
+                    //get data
+
+                    String mondayDep = "" + ds.child("mondayDep").getValue();
+                    String tuesdayDep = "" + ds.child("tuesdayDep").getValue();
+                    String wednesdayDep = "" + ds.child("wednesdayDep").getValue();
+                    String thursdayDep = "" + ds.child("thursdayDep").getValue();
+                    String fridayDep = "" + ds.child("fridayDep").getValue();
+                    String mondayRet = "" + ds.child("mondayRet").getValue();
+                    String tuesdayRet = "" + ds.child("tuesdayRet").getValue();
+                    String wednesdayRet = "" + ds.child("wednesdayRet").getValue();
+                    String thursdayRet = "" + ds.child("thursdayRet").getValue();
+                    String fridayRet = "" + ds.child("fridayRet").getValue();
+
+                    //set data
+                    mondayDepTv.setText(mondayDep);
+                    tuesdayDepTv.setText(tuesdayDep);
+                    wednesdayDepTv.setText(wednesdayDep);
+                    thursdayDepTv.setText(thursdayDep);
+                    fridayDepTv.setText(fridayDep);
+                    mondayRetTv.setText(mondayRet);
+                    tuesdayRetTv.setText(tuesdayRet);
+                    wednesdayRetTv.setText(wednesdayRet);
+                    thursdayRetTv.setText(thursdayRet);
+                    fridayRetTv.setText(fridayRet);
+
                 }
             }
 
@@ -249,8 +306,7 @@ public class ProfileFragment extends Fragment {
                     HashMap<String, Object> result = new HashMap<>();
                     result.put(key, value);
 
-                    databaseReference.child(user.getUid()).updateChildren(result)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    databaseReference.child(user.getUid()).updateChildren(result).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             //updated message

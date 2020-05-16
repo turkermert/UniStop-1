@@ -29,7 +29,7 @@ import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    EditText mEmailEt, mPasswordEt;
+    EditText mEmailEt, mPasswordEt, mPasswordAgain;
     Button mRegisterBtn;
     Context context = this;
     TextView mHaveAccountTv;
@@ -58,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
         mPasswordEt = findViewById(R.id.passwordEt);
         mRegisterBtn = findViewById(R.id.registerBtn);
         mHaveAccountTv = findViewById(R.id.have_accountTv);
+        mPasswordAgain = findViewById(R.id.re_password);
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
@@ -72,6 +73,7 @@ public class RegisterActivity extends AppCompatActivity {
                 //input email, password
                 String email = mEmailEt.getText().toString().trim();
                 String password = mPasswordEt.getText().toString().trim();
+                String passwordAgain = mPasswordAgain.getText().toString().trim();
                 //validate
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
                     //give error if its not an email
@@ -82,6 +84,9 @@ public class RegisterActivity extends AppCompatActivity {
                     //give error if password length is lower than 8
                     mPasswordEt.setError("Password length at least 8 characters");
                     mPasswordEt.setFocusable(true);
+                }
+                else if(!passwordAgain.equals(password)){
+                    mPasswordAgain.setError("these passwords are not same.");
                 }
 
                 //atılım email check condition
@@ -143,6 +148,8 @@ public class RegisterActivity extends AppCompatActivity {
                             hashMap.put("image", "");
                             hashMap.put("usertype", "");
                             hashMap.put("district", "");
+                            hashMap.put("address", "");
+
                             //Firabase database instance
                             FirebaseDatabase database = FirebaseDatabase.getInstance();
                             //path to store user data named "Users"

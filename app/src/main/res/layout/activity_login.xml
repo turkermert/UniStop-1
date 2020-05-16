@@ -57,6 +57,18 @@
         android:drawableLeft="@drawable/ic_register_white"
         android:textColor="@color/cardview_light_background"/>
 
+    <CheckBox
+        android:id="@+id/checkBoxRememberMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Remember me"
+        android:layout_below="@+id/passwordTIL"
+        android:layout_marginLeft="230dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <TextView
         android:id="@+id/recoverPassTv"
         android:layout_width="match_parent"

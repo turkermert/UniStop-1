@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.atakan.unistop_tt.ChatActivity;
 import com.atakan.unistop_tt.R;
+import com.atakan.unistop_tt.UserProfileActivity;
 import com.atakan.unistop_tt.models.ModelUser;
 import com.squareup.picasso.Picasso;
 
@@ -65,7 +66,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
                 //later here will be changed with show clicked user's profile
 
                 //starts activity by putting Uid of receiver
-                Intent intent = new Intent(context, ChatActivity.class);
+                Intent intent = new Intent(context, UserProfileActivity.class);
                 intent.putExtra("receiverUid", receiverUid);
                 context.startActivity(intent);
             }

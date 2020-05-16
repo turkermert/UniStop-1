@@ -9,11 +9,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,6 +35,10 @@ public class LoginActivity extends AppCompatActivity {
     Context context = this;
     TextView notHaveAccntTv, mRecoverPassTv;
 
+    private CheckBox mCheckBoxRemember;
+    private SharedPreferences mPrefs;
+    private static final String PREFS_NAME = "PrefsFile";
+
     //Declare an instance of FirebaseAuth
     private FirebaseAuth mAuth;
 
@@ -45,6 +51,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mPrefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Login");
@@ -62,6 +70,9 @@ public class LoginActivity extends AppCompatActivity {
         mLoginBtn = findViewById(R.id.loginBtn);
         mRecoverPassTv = findViewById(R.id.recoverPassTv);
         notHaveAccntTv = findViewById(R.id.nothave_accountTv);
+        mCheckBoxRemember = findViewById(R.id.checkBoxRememberMe);
+
+        getPreferencesData();
 
         //login button click
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
@@ -78,6 +89,18 @@ public class LoginActivity extends AppCompatActivity {
                 else {
                     //valid email, check it from db
                     loginUser(email, password);
+                    if(mCheckBoxRemember.isChecked()){
+                        Boolean boolIsChecked=mCheckBoxRemember.isChecked();
+                        SharedPreferences.Editor editor=mPrefs.edit();
+                        editor.putString("pref_name", mEmailEt.getText().toString());
+                        editor.putString("pref_pass", mPasswordEt.getText().toString());
+                        editor.putBoolean("pref_check", boolIsChecked);
+                        editor.apply();
+                        Toast.makeText(getApplicationContext(),"Saved.",Toast.LENGTH_SHORT).show();
+                    }else{
+                        mPrefs.edit().clear().apply();
+                    }
+
                 }
             }
         });
@@ -101,6 +124,22 @@ public class LoginActivity extends AppCompatActivity {
 
         //init progress dialog
         progressDialog = new ProgressDialog(context);
+    }
+
+    private void getPreferencesData() {
+        SharedPreferences sp = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        if(sp.contains("pref_name")){
+            String u = sp.getString("pref_name", "not found.");
+            mEmailEt.setText(u.toString());
+        }
+        if (sp.contains("pref_pass")){
+            String p = sp.getString("pref_pass", "not found.");
+            mPasswordEt.setText(p.toString());
+        }
+        if(sp.contains("pref_check")){
+            Boolean b = sp.getBoolean("pref_check", false);
+            mCheckBoxRemember.setChecked(b);
+        }
     }
 
     private void showRecoverPasswordDialog() {

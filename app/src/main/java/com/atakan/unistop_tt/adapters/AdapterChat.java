@@ -117,7 +117,6 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.MyHolder> {
             //init views
             profileIv = itemView.findViewById(R.id.profileIv);
             messageTv = itemView.findViewById(R.id.messageTv);
-            timeTv = itemView.findViewById(R.id.timeTv);
             isSeenTv = itemView.findViewById(R.id.isSeenTv);
 
         }
