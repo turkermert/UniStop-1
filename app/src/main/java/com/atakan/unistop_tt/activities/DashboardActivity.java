@@ -1,4 +1,4 @@
-package com.atakan.unistop_tt;
+package com.atakan.unistop_tt.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -7,9 +7,13 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 
+import com.atakan.unistop_tt.fragments.ChatListFragment;
+import com.atakan.unistop_tt.fragments.HomeFragment;
+import com.atakan.unistop_tt.fragments.ProfileFragment;
+import com.atakan.unistop_tt.R;
+import com.atakan.unistop_tt.fragments.UserFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

@@ -1,4 +1,4 @@
-package com.atakan.unistop_tt;
+package com.atakan.unistop_tt.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.atakan.unistop_tt.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;

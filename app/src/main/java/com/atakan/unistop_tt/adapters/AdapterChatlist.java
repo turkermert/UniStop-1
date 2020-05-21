@@ -11,9 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.atakan.unistop_tt.ChatActivity;
+import com.atakan.unistop_tt.activities.ChatActivity;
 import com.atakan.unistop_tt.R;
-import com.atakan.unistop_tt.models.ModelChatlist;
 import com.atakan.unistop_tt.models.ModelUser;
 import com.squareup.picasso.Picasso;
 

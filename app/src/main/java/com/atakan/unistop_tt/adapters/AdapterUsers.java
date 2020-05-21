@@ -7,14 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.atakan.unistop_tt.ChatActivity;
 import com.atakan.unistop_tt.R;
-import com.atakan.unistop_tt.UserProfileActivity;
+import com.atakan.unistop_tt.activities.DriverProfileActivity;
+import com.atakan.unistop_tt.activities.PassengerProfileActivity;
 import com.atakan.unistop_tt.models.ModelUser;
 import com.squareup.picasso.Picasso;
 
@@ -46,7 +45,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
         final String receiverUid = userList.get(position).getUid();
         String userImage = userList.get(position).getImage();
         String userName = userList.get(position).getName();
-        String userType = userList.get(position).getUsertype();
+        final String userType = userList.get(position).getUsertype();
 
         //set data
         myHolder.mNameTv.setText(userName);
@@ -62,13 +61,20 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
         myHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //click user from user list to start chatting
-                //later here will be changed with show clicked user's profile
+                //click user from user list to show user's profile
 
-                //starts activity by putting Uid of receiver
-                Intent intent = new Intent(context, UserProfileActivity.class);
-                intent.putExtra("receiverUid", receiverUid);
-                context.startActivity(intent);
+                //check users type
+                if(userType.equals("passenger")){
+                    Intent intent = new Intent(context, PassengerProfileActivity.class);
+                    intent.putExtra("receiverUid", receiverUid);
+                    context.startActivity(intent);
+                }
+                else{
+                    Intent intent = new Intent(context, DriverProfileActivity.class);
+                    intent.putExtra("receiverUid", receiverUid);
+                    context.startActivity(intent);
+                }
+
             }
         });
     }

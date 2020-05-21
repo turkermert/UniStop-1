@@ -1,4 +1,4 @@
-package com.atakan.unistop_tt;
+package com.atakan.unistop_tt.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.atakan.unistop_tt.R;
+import com.atakan.unistop_tt.activities.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

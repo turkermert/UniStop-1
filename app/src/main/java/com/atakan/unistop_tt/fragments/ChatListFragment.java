@@ -1,4 +1,4 @@
-package com.atakan.unistop_tt;
+package com.atakan.unistop_tt.fragments;
 
 import android.os.Bundle;
 
@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.atakan.unistop_tt.R;
 import com.atakan.unistop_tt.adapters.AdapterChatlist;
 import com.atakan.unistop_tt.models.ModelChat;
 import com.atakan.unistop_tt.models.ModelChatlist;

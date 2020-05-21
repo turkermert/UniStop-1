@@ -1,24 +1,27 @@
-package com.atakan.unistop_tt;
+package com.atakan.unistop_tt.activities;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.atakan.unistop_tt.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -26,11 +29,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class LoginAfterRegisterActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
+
     EditText mEmailEt, mPasswordEt;
     Button mLoginBtn;
     Context context = this;
     TextView notHaveAccntTv, mRecoverPassTv;
+
+    private CheckBox mCheckBoxRemember;
+    private SharedPreferences mPrefs;
+    private static final String PREFS_NAME = "PrefsFile";
 
     //Declare an instance of FirebaseAuth
     private FirebaseAuth mAuth;
@@ -43,7 +51,9 @@ public class LoginAfterRegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_after_register);
+        setContentView(R.layout.activity_login);
+
+        mPrefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Login");
@@ -56,11 +66,14 @@ public class LoginAfterRegisterActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         //init
-        mEmailEt = findViewById(R.id.emailEt_ar);
-        mPasswordEt = findViewById(R.id.passwordEt_ar);
-        mLoginBtn = findViewById(R.id.loginBtn_ar);
-        mRecoverPassTv = findViewById(R.id.recoverPassTv_ar);
-        notHaveAccntTv = findViewById(R.id.nothave_accountTv_ar);
+        mEmailEt = findViewById(R.id.emailEt);
+        mPasswordEt = findViewById(R.id.passwordEt);
+        mLoginBtn = findViewById(R.id.loginBtn);
+        mRecoverPassTv = findViewById(R.id.recoverPassTv);
+        notHaveAccntTv = findViewById(R.id.nothave_accountTv);
+        mCheckBoxRemember = findViewById(R.id.checkBoxRememberMe);
+
+        getPreferencesData();
 
         //login button click
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +90,18 @@ public class LoginAfterRegisterActivity extends AppCompatActivity {
                 else {
                     //valid email, check it from db
                     loginUser(email, password);
+                    if(mCheckBoxRemember.isChecked()){
+                        Boolean boolIsChecked=mCheckBoxRemember.isChecked();
+                        SharedPreferences.Editor editor=mPrefs.edit();
+                        editor.putString("pref_name", mEmailEt.getText().toString());
+                        editor.putString("pref_pass", mPasswordEt.getText().toString());
+                        editor.putBoolean("pref_check", boolIsChecked);
+                        editor.apply();
+                        Toast.makeText(getApplicationContext(),"Saved.",Toast.LENGTH_SHORT).show();
+                    }else{
+                        mPrefs.edit().clear().apply();
+                    }
+
                 }
             }
         });
@@ -100,6 +125,22 @@ public class LoginAfterRegisterActivity extends AppCompatActivity {
 
         //init progress dialog
         progressDialog = new ProgressDialog(context);
+    }
+
+    private void getPreferencesData() {
+        SharedPreferences sp = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        if(sp.contains("pref_name")){
+            String u = sp.getString("pref_name", "not found.");
+            mEmailEt.setText(u.toString());
+        }
+        if (sp.contains("pref_pass")){
+            String p = sp.getString("pref_pass", "not found.");
+            mPasswordEt.setText(p.toString());
+        }
+        if(sp.contains("pref_check")){
+            Boolean b = sp.getBoolean("pref_check", false);
+            mCheckBoxRemember.setChecked(b);
+        }
     }
 
     private void showRecoverPasswordDialog() {
@@ -182,17 +223,11 @@ public class LoginAfterRegisterActivity extends AppCompatActivity {
                             //dismiss progress dialog
                             progressDialog.dismiss();
 
-                            if(user.isEmailVerified()) {
-                                //if user confirmed account from mail
-                                // Sign in success, update UI with the signed-in user's information
-                                //Go to other page
-                                startActivity(new Intent(context, UsertypeActivity.class));
-                                finish();
-                            }
-                            else{
-                                //if user did not confirm account from mail
-                                Toast.makeText(getApplicationContext(), "Please check your mail", Toast.LENGTH_SHORT).show();
-                            }
+                            // Sign in success, update UI with the signed-in user's information
+                            //Go to other page
+                            startActivity(new Intent(context, DashboardActivity.class));
+                            finish();
+
                         } else {
                             //dismiss progress dialog
                             progressDialog.dismiss();

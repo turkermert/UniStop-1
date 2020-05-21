@@ -1,9 +1,8 @@
-package com.atakan.unistop_tt;
+package com.atakan.unistop_tt.activities;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,9 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import com.atakan.unistop_tt.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,10 +26,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-public class UserProfileActivity extends AppCompatActivity {
+public class PassengerProfileActivity extends AppCompatActivity {
 
     TextView mondayDepTv, tuesdayDepTv, wednesdayDepTv, thursdayDepTv, fridayDepTv, mondayRetTv, tuesdayRetTv, wednesdayRetTv, thursdayRetTv, fridayRetTv;
-    Button sendMessageBtn;
+    Button sendMessageBtn, rateProfileBtn;
     Context context = this;
 
     FirebaseAuth firebaseAuth;
@@ -48,7 +46,7 @@ public class UserProfileActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_profile);
+        setContentView(R.layout.activity_passenger_profile);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("UniStop");
@@ -91,6 +89,21 @@ public class UserProfileActivity extends AppCompatActivity {
                 context.startActivity(intent);
             }
         });
+
+//        rateProfileBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(context, RateProfileActivity.class);
+//                context.startActivity(intent);
+//            }
+//        });
+
+        /*rateProfileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showRateProfileDialog();
+            }
+        });*/
 
         //take data from database
         Query query = databaseReferenceUserInfo.orderByChild("uid").equalTo(receiverUid);
@@ -166,7 +179,62 @@ public class UserProfileActivity extends AppCompatActivity {
 
             }
         });
+
     }
+
+   /* private void showRateProfileDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Rate Profile");
+
+        LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setGravity(Gravity.CENTER);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        RatingBar ratingBar = new RatingBar(this);
+        ratingBar.setNumStars(5);
+        ratingBar.setStepSize(1);
+
+        Button button = new Button(this);
+        button.setText("Rate");
+
+        linearLayout.addView(ratingBar);
+        linearLayout.addView(button);
+
+        builder.setView(linearLayout);
+
+        builder.create().show();
+
+        //String s = String.valueOf(ratingBar.getRating());
+
+    }*/
+
+//    private void showCarInformation() {
+//        RelativeLayout carProfile = findViewById(R.id.carProfile);
+//        RelativeLayout carInformationRL = new RelativeLayout(this);
+//        TextView carInformationTV = new TextView(this);
+//        carInformationTV.setText("Car Information");
+//        carInformationTV.setTextSize(25);
+//        carInformationTV.setTypeface(null, Typeface.BOLD);
+//        carInformationRL.addView(carInformationTV);
+//
+//
+//        RelativeLayout carInformationTableRL = new RelativeLayout(this);
+//        TableLayout tableLayout = new TableLayout(this);
+//        TableRow modelTR = new TableRow(this);
+//        TextView modelTitleTv = new TextView(this);
+//        modelTitleTv.setText("Brand / Model");
+//        TextView modelTv = new TextView(this);
+//        modelTR.addView(modelTitleTv);
+//        modelTR.addView(modelTv);
+//        tableLayout.addView(modelTR);
+//        carInformationTableRL.addView(tableLayout);
+//
+//        carProfile.addView(carInformationRL);
+//        carProfile.addView(carInformationTableRL);
+//
+//
+//
+//    }
 
 
     private void checkUserStatus(){

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F1EDED"
-    tools:context=".ProfileFragment">
+    tools:context=".fragments.ProfileFragment">
 
     <ScrollView
         android:id="@+id/profileTop"
@@ -80,7 +80,6 @@
                             android:text="-"
                             android:textSize="15sp"/>
                     </LinearLayout>
-
                     <TextView
                         android:id="@+id/userTypeTv"
                         android:layout_width="match_parent"
@@ -90,6 +89,21 @@
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="@color/colorWhite"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <Button
+                            android:id="@+id/fab"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Edıt Profıle"
+                            android:padding="10dp"
+                            android:textSize="15sp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="10dp"
+                            android:drawableLeft="@drawable/ic_edit_icon"/>
+                    </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>
@@ -158,14 +172,14 @@
                     android:id="@+id/mondayDepTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="09.30"
+                    android:text="-"
                     android:textSize="17sp"
                     android:paddingLeft="15dp" />
                 <TextView
                     android:id="@+id/mondayRetTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="15.30"
+                    android:text="-"
                     android:textSize="17sp"
                     android:paddingLeft="15dp"/>
             </TableRow>
@@ -183,14 +197,14 @@
                     android:id="@+id/tuesdayDepTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="10.30"
+                    android:text="-"
                     android:textSize="17sp"
                     android:paddingLeft="15dp"/>
                 <TextView
                     android:id="@+id/tuesdayRetTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="16.30"
+                    android:text="-"
                     android:textSize="17sp"
                     android:paddingLeft="15dp"/>
             </TableRow>
@@ -233,14 +247,14 @@
                     android:id="@+id/thursdayDepTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="09.30"
+                    android:text="-"
                     android:textSize="17sp"
                     android:paddingLeft="15dp"/>
                 <TextView
                     android:id="@+id/thursdayRetTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="17.30"
+                    android:text="-"
                     android:textSize="17sp"
                     android:paddingLeft="15dp"/>
             </TableRow>
@@ -259,27 +273,26 @@
                     android:id="@+id/fridayDepTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="11.30"
+                    android:text="-"
                     android:textSize="17sp"
                     android:paddingLeft="15dp"/>
                 <TextView
                     android:id="@+id/fridayRetTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="13.30"
+                    android:text="-"
                     android:textSize="17sp"
                     android:paddingLeft="15dp"/>
             </TableRow>
         </TableLayout>
     </RelativeLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:src="@drawable/ic_edit_white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="10dp"/>
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/fab"-->
+<!--        android:src="@drawable/ic_edit_white"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        android:layout_margin="10dp"/>-->
 
 </RelativeLayout>

@@ -8,21 +8,22 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/unistop_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/unistop_icon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ChatActivity"
+        <activity android:name=".activities.ChatActivity"
             android:theme="@style/AppThemeNo"/>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".LessonhourActivity" />
-        <activity android:name=".UsertypeActivity" />
-        <activity android:name=".CarInformationActivity" />
-        <activity android:name=".UserProfileActivity" />
-        <activity android:name=".DashboardActivity"></activity>
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.LessonhourActivity" />
+        <activity android:name=".activities.UsertypeActivity" />
+        <activity android:name=".activities.CarInformationActivity" />
+        <activity android:name=".activities.PassengerProfileActivity" />
+        <activity android:name=".activities.DriverProfileActivity" />
+        <activity android:name=".activities.DashboardActivity"></activity>
+        <activity android:name=".activities.RegisterActivity" />
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

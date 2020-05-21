@@ -1,4 +1,4 @@
-package com.atakan.unistop_tt;
+package com.atakan.unistop_tt.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,13 +12,13 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.atakan.unistop_tt.R;
 import com.atakan.unistop_tt.adapters.AdapterChat;
 import com.atakan.unistop_tt.models.ModelChat;
 import com.google.firebase.auth.FirebaseAuth;

@@ -1,4 +1,4 @@
-package com.atakan.unistop_tt;
+package com.atakan.unistop_tt.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,13 +9,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.atakan.unistop_tt.R;
+import com.atakan.unistop_tt.models.ModelLessonHours;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -149,10 +149,10 @@ public class LessonhourActivity extends AppCompatActivity implements AdapterView
         else if(adapterView.getId() == R.id.district)
             district_string = (String) adapterView.getItemAtPosition(i);
 
-        LessonHours lessonHours = new LessonHours(user.getUid(), lesson_time_mondayDep, lesson_time_tuesdayDep,
+        ModelLessonHours modelLessonHours = new ModelLessonHours(user.getUid(), lesson_time_mondayDep, lesson_time_tuesdayDep,
                 lesson_time_wednesdayDep, lesson_time_thursdayDep, lesson_time_fridayDep, lesson_time_mondayRet,
                 lesson_time_tuesdayRet, lesson_time_wednesdayRet, lesson_time_thursdayRet, lesson_time_fridayRet);
-        databaseReference.child(user.getUid()).setValue(lessonHours);
+        databaseReference.child(user.getUid()).setValue(modelLessonHours);
 
         HashMap<String, Object> result = new HashMap<>();
         result.put("district", district_string);

@@ -1,13 +1,13 @@
-package com.atakan.unistop_tt;
+package com.atakan.unistop_tt.models;
 
-public class LessonHours {
+public class ModelLessonHours {
     private String uid;
     private String mondayDep, tuesdayDep, wednesdayDep, thursdayDep, fridayDep, mondayRet, tuesdayRet, wednesdayRet, thursdayRet, fridayRet;
 
-    public LessonHours() {
+    public ModelLessonHours() {
     }
 
-    public LessonHours(String uid, String mondayDep, String tuesdayDep, String wednesdayDep, String thursdayDep, String fridayDep, String mondayRet, String tuesdayRet, String wednesdayRet, String thursdayRet, String fridayRet) {
+    public ModelLessonHours(String uid, String mondayDep, String tuesdayDep, String wednesdayDep, String thursdayDep, String fridayDep, String mondayRet, String tuesdayRet, String wednesdayRet, String thursdayRet, String fridayRet) {
         this.uid = uid;
         this.mondayDep = mondayDep;
         this.tuesdayDep = tuesdayDep;

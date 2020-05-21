@@ -1,4 +1,4 @@
-package com.atakan.unistop_tt;
+package com.atakan.unistop_tt.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
+import com.atakan.unistop_tt.R;
+import com.atakan.unistop_tt.activities.MainActivity;
 import com.atakan.unistop_tt.adapters.AdapterUsers;
 import com.atakan.unistop_tt.models.ModelUser;
 import com.google.firebase.auth.FirebaseAuth;
