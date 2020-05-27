@@ -19,12 +19,11 @@
     </string-array>
 
     <string-array name="districts">
-        <item>-</item>
+        <item>Çankaya</item>
         <item>Akyurt</item>
         <item>Altındağ</item>
         <item>Ayaş</item>
         <item>Bala</item>
-        <item>Çankaya</item>
         <item>Çubuk</item>
         <item>Elmadağ</item>
         <item>Etimesgut</item>

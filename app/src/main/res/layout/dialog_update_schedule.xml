@@ -1,32 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     android:paddingTop="20dp"
     android:paddingBottom="20dp">
 
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Select lesson hours"
-        android:textColor="@color/colorAccent"
-        android:layout_marginTop="40dp"
-        android:textSize="25sp"/>
-
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:gravity="center_horizontal"
-        android:paddingTop="80dp">
-
-        <View
-            android:layout_height="5dp"
-            android:layout_marginBottom="10dp"
-            android:background="@color/colorPrimary" />
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
 
         <TableRow
             android:layout_width="match_parent"
@@ -37,7 +19,7 @@
                 android:layout_height="wrap_content"
                 android:layout_column="1"
                 android:text="Departure"
-                android:textSize="25sp" />
+                android:textSize="23sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -45,7 +27,7 @@
                 android:layout_column="2"
                 android:paddingLeft="10dp"
                 android:text="Return"
-                android:textSize="25sp" />
+                android:textSize="23sp" />
         </TableRow>
 
         <TableRow
@@ -56,8 +38,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="50dp"
                 android:text="Monday"
+                android:paddingLeft="10dp"
                 android:textSize="20sp" />
 
             <Spinner
@@ -82,8 +64,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="50dp"
                 android:text="Tuesday"
+                android:paddingLeft="10dp"
                 android:textSize="20sp" />
 
             <Spinner
@@ -108,10 +90,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="50dp"
+                android:layout_marginRight="20dp"
                 android:text="Wednesday"
-                android:textSize="20sp"
-                android:layout_marginRight="20dp"/>
+                android:paddingLeft="10dp"
+                android:textSize="20sp" />
 
             <Spinner
                 android:id="@+id/wednesdayDep"
@@ -135,8 +117,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="50dp"
                 android:text="Thursday"
+                android:paddingLeft="10dp"
                 android:textSize="20sp" />
 
             <Spinner
@@ -161,7 +143,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="50dp"
+                android:paddingLeft="10dp"
                 android:text="Friday"
                 android:textSize="20sp" />
 
@@ -177,79 +159,6 @@
                 android:layout_height="wrap_content"
                 android:entries="@array/times" />
 
-        </TableRow>
-
-        <View
-            android:layout_height="5dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="30dp"
-            android:background="@color/colorPrimary" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Enter address details"
-            android:textColor="@color/colorAccent"
-            android:layout_marginTop="20dp"
-            android:textSize="25sp"/>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="50dp"
-                android:text="District"
-                android:textSize="18sp" />
-
-            <Spinner
-                android:id="@+id/district"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/districts"
-                android:layout_span="2"/>
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="50dp"
-                android:text="Address \n\tDetail"
-                android:textSize="18sp"/>
-
-            <EditText
-                android:id="@+id/address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Bahçelievler Metrosu"
-                android:textSize="15sp"
-                android:paddingLeft="9dp"
-                android:layout_span="2"/>
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="15dp">
-
-            <Button
-                android:id="@+id/times_next"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_column="2"
-                android:text="Next"
-                android:textColor="@color/cardview_light_background"
-                android:textSize="17sp"></Button>
         </TableRow>
     </TableLayout>
 </RelativeLayout>

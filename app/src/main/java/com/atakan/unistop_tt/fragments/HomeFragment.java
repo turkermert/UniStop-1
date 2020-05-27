@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.atakan.unistop_tt.R;
 import com.atakan.unistop_tt.activities.MainActivity;

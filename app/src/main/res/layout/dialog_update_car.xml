@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/detailsDriver">
+        <EditText
+            android:id="@+id/modelInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="The brand/model of your car"
+            android:layout_margin="5dp"
+            android:inputType="text" />
+        <EditText
+            android:id="@+id/plateInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:hint="The plate of your car" />
+        <EditText
+            android:id="@+id/colorInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="The color of your car"
+            android:inputType="text"
+            android:layout_margin="5dp"
+            android:layout_marginTop="20dp"/>
+        <EditText
+            android:id="@+id/dateInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="5dp"
+            android:hint="The date you received your driver license"
+            android:inputType="date" />
+    </LinearLayout>
+</RelativeLayout>
+

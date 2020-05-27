@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,15 +24,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atakan.unistop_tt.R;
 import com.atakan.unistop_tt.activities.MainActivity;
+import com.atakan.unistop_tt.models.ModelLessonHours;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -57,23 +63,32 @@ import static com.google.firebase.storage.FirebaseStorage.getInstance;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     //firebase
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference, databaseReferenceLessonHours;
+    DatabaseReference databaseReference, databaseReferenceLessonHours, databaseReferenceCarInformation;
     //storage
     StorageReference storageReference;
     //path where images of user profile pic will be stored
     String storagePath = "Users_Profile_Imgs/";
+    String uid;
+    String district, address;
+    String lesson_time_mondayDep, lesson_time_tuesdayDep, lesson_time_wednesdayDep,
+            lesson_time_thursdayDep, lesson_time_fridayDep, lesson_time_mondayRet,
+            lesson_time_tuesdayRet, lesson_time_wednesdayRet, lesson_time_thursdayRet,
+            lesson_time_fridayRet;
+    String colorString, modelString, plateString, licenseDateString;
 
 
     ImageView avatarTv;
     TextView nameTv, districtTv, addressTv, userTypeTv;
     TextView mondayDepTv, tuesdayDepTv, wednesdayDepTv, thursdayDepTv, fridayDepTv, mondayRetTv, tuesdayRetTv, wednesdayRetTv, thursdayRetTv, fridayRetTv;
+    TextView carBrandTv, carPlateTv, carColorTv, driverLicenseTv;
     Button fab;
+    RelativeLayout carInformation;
 
     ProgressDialog progressDialog;
 
@@ -98,7 +113,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        final View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         //init firabase
         firebaseAuth = FirebaseAuth.getInstance();
@@ -106,7 +121,9 @@ public class ProfileFragment extends Fragment {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Users");
         databaseReferenceLessonHours = firebaseDatabase.getReference("LessonHours");
+        databaseReferenceCarInformation = firebaseDatabase.getReference("CarInformation");
         storageReference = getInstance().getReference(); //firebase storage reference
+        uid = user.getUid();
 
         //init arrays of permissions
         cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -118,6 +135,11 @@ public class ProfileFragment extends Fragment {
         addressTv = view.findViewById(R.id.addressTv);
         userTypeTv = view.findViewById(R.id.userTypeTv);
         fab = view.findViewById(R.id.fab);
+        carInformation = view.findViewById(R.id.carInformation);
+        carBrandTv = view.findViewById(R.id.carBrandTv);
+        carPlateTv = view.findViewById(R.id.carPlateTv);
+        carColorTv = view.findViewById(R.id.carColorTv);
+        driverLicenseTv = view.findViewById(R.id.driverLicenseTv);
 
         mondayDepTv = view.findViewById(R.id.mondayDepTv);
         tuesdayDepTv = view.findViewById(R.id.tuesdayDepTv);
@@ -163,6 +185,10 @@ public class ProfileFragment extends Fragment {
                         //if there is any exception while getting image then set default
                         Picasso.get().load(R.drawable.ic_add_image).into(avatarTv);
                     }
+
+                    if (userType.equals("passenger")) {
+                        carInformation.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
 
@@ -172,12 +198,12 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        Query query_lh= databaseReferenceLessonHours.orderByChild("uid").equalTo(user.getUid());
+        Query query_lh = databaseReferenceLessonHours.orderByChild("uid").equalTo(user.getUid());
         query_lh.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //check until required data get
-                for(DataSnapshot ds: dataSnapshot.getChildren()){
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     //get data
 
                     String mondayDep = "" + ds.child("mondayDep").getValue();
@@ -212,15 +238,47 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        Query query_ci = databaseReferenceCarInformation.orderByChild("uid").equalTo(uid);
+        query_ci.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    //get data
+                    String car_color = "" + ds.child("color").getValue();
+                    String car_model = "" + ds.child("model").getValue();
+                    String car_plate = "" + ds.child("plate").getValue();
+                    String driver_license_date = "" + ds.child("licensedate").getValue();
+
+                    //set data
+                    carPlateTv.setText(car_plate);
+                    carBrandTv.setText(car_model);
+                    carColorTv.setText(car_color);
+                    driverLicenseTv.setText(driver_license_date);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showEditProfileDialog();
+
+                if (userTypeTv.getText().toString().trim().equals("passenger")){
+                    showEditProfileDialog();
+                }
+                else if (userTypeTv.getText().toString().trim().equals("driver")){
+                    showEditDriverProfileDialog();
+                }
             }
         });
 
         return view;
     }
+
 
     private boolean checkStoragePermissions() {
         //check storage permission, if enabled return true
@@ -247,7 +305,7 @@ public class ProfileFragment extends Fragment {
 
     private void showEditProfileDialog() {
         //options to show in dialog
-        String options[] = {"Edit Profile Picture", "Edit Name", "Edit Phone"};
+        String options[] = {"Edit Profile Picture", "Edit Name", "Edit Address", "Edit Schedule"};
         //alert dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Choose Action");
@@ -263,11 +321,15 @@ public class ProfileFragment extends Fragment {
                     //Edit name clicked
                     progressDialog.setMessage("Updating Name");
                     //calling method and pass key "name" as parameter to update it's value in database
-                    showNamePhoneUpdateDialog("name");
+                    showNameUpdateDialog();
                 } else if (i == 2) {
-                    //Edit phone clicked
-                    progressDialog.setMessage("Updating Phone");
-                    showNamePhoneUpdateDialog("phone");
+                    //Edit address clicked
+                    progressDialog.setMessage("Updating Address");
+                    showAddressUpdateDialog();
+                } else if (i == 3) {
+                    //Edit schedule clicked
+                    progressDialog.setMessage("Updating Schedule");
+                    showScheduleUpdateDialog();
                 }
             }
         });
@@ -275,19 +337,230 @@ public class ProfileFragment extends Fragment {
         builder.create().show();
     }
 
-    private void showNamePhoneUpdateDialog(final String key) {
-        //parameter "key" will contain "name" or "phone"
+    private void showEditDriverProfileDialog() {
+        //options to show in dialog
+        String options[] = {"Edit Profile Picture", "Edit Name", "Edit Address", "Edit Schedule", "Edit Car Details"};
+        //alert dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Choose Action");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //handle dialog item clicks
+                if (i == 0) {
+                    //Edit Profile photo clicked
+                    progressDialog.setMessage("Updating Profile Picture");
+                    showImagePicDialog();
+                } else if (i == 1) {
+                    //Edit name clicked
+                    progressDialog.setMessage("Updating Name");
+                    //calling method and pass key "name" as parameter to update it's value in database
+                    showNameUpdateDialog();
+                } else if (i == 2) {
+                    //Edit address clicked
+                    progressDialog.setMessage("Updating Address");
+                    showAddressUpdateDialog();
+                } else if (i == 3) {
+                    //Edit schedule clicked
+                    progressDialog.setMessage("Updating Schedule");
+                    showScheduleUpdateDialog();
+                }
+                else if (i == 4) {
+                    //Edit schedule clicked
+                    progressDialog.setMessage("Updating Driver Details");
+                    showCarDetailsUpdateDialog();
+                }
+            }
+        });
+        //create and show dialog
+        builder.create().show();
+    }
 
+    private void showCarDetailsUpdateDialog() {
         //custom dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Update " + key);
+        builder.setTitle("Update car information");
+        View view = getLayoutInflater().inflate(R.layout.dialog_update_car, null);
+
+        //add edittexts
+        final EditText colorInput = view.findViewById(R.id.colorInput);
+        final EditText modelInput = view.findViewById(R.id.modelInput);
+        final EditText plateInput = view.findViewById(R.id.plateInput);
+        final EditText licenseDateInput = view.findViewById(R.id.dateInput);
+
+        Query query_ci = databaseReferenceCarInformation.orderByChild("uid").equalTo(uid);
+        query_ci.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    //get data
+                    String car_color = "" + ds.child("color").getValue();
+                    String car_model = "" + ds.child("model").getValue();
+                    String car_plate = "" + ds.child("plate").getValue();
+                    String driver_license_date = "" + ds.child("licensedate").getValue();
+
+                    //set data
+                    plateInput.setText(car_plate);
+                    modelInput.setText(car_model);
+                    colorInput.setText(car_color);
+                    licenseDateInput.setText(driver_license_date);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        //add button in dialog to update
+        builder.setPositiveButton("Update ", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                colorString = colorInput.getText().toString().trim();
+                modelString = modelInput.getText().toString().trim();
+                plateString = plateInput.getText().toString().trim();
+                licenseDateString = licenseDateInput.getText().toString().trim();
+
+                HashMap<String, Object> result = new HashMap<>();
+                result.put("color", colorString);
+                result.put("licensedate", licenseDateString);
+                result.put("model", modelString);
+                result.put("plate", plateString);
+                databaseReferenceCarInformation.child(user.getUid()).updateChildren(result);
+            }
+        });
+        //add button in dialog to cancel
+        builder.setNegativeButton("Cancel ", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        builder.setView(view);
+        builder.create().show();
+
+    }
+
+    private void showScheduleUpdateDialog() {
+        //custom dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Update schedule");
+        View view = getLayoutInflater().inflate(R.layout.dialog_update_schedule, null);
+
+        ArrayAdapter<CharSequence> adapterSchedule = ArrayAdapter.createFromResource(getActivity(),
+                R.array.times, android.R.layout.simple_spinner_item);
+        adapterSchedule.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        //add spinners
+        final Spinner mondayDep = view.findViewById(R.id.mondayDep);
+        final Spinner tuesdayDep = view.findViewById(R.id.tuesdayDep);
+        final Spinner wednesdayDep = view.findViewById(R.id.wednesdayDep);
+        final Spinner thursdayDep = view.findViewById(R.id.thursdayDep);
+        final Spinner fridayDep = view.findViewById(R.id.fridayDep);
+        final Spinner mondayRet = view.findViewById(R.id.mondayRet);
+        final Spinner tuesdayRet = view.findViewById(R.id.tuesdayRet);
+        final Spinner wednesdayRet = view.findViewById(R.id.wednesdayRet);
+        final Spinner thursdayRet = view.findViewById(R.id.thursdayRet);
+        final Spinner fridayRet = view.findViewById(R.id.fridayRet);
+
+        mondayDep.setAdapter(adapterSchedule);
+        tuesdayDep.setAdapter(adapterSchedule);
+        wednesdayDep.setAdapter(adapterSchedule);
+        thursdayDep.setAdapter(adapterSchedule);
+        fridayDep.setAdapter(adapterSchedule);
+        mondayRet.setAdapter(adapterSchedule);
+        tuesdayRet.setAdapter(adapterSchedule);
+        wednesdayRet.setAdapter(adapterSchedule);
+        thursdayRet.setAdapter(adapterSchedule);
+        fridayRet.setAdapter(adapterSchedule);
+
+        mondayDep.setOnItemSelectedListener(this);
+        tuesdayDep.setOnItemSelectedListener(this);
+        wednesdayDep.setOnItemSelectedListener(this);
+        thursdayDep.setOnItemSelectedListener(this);
+        fridayDep.setOnItemSelectedListener(this);
+        mondayRet.setOnItemSelectedListener(this);
+        tuesdayRet.setOnItemSelectedListener(this);
+        wednesdayRet.setOnItemSelectedListener(this);
+        thursdayRet.setOnItemSelectedListener(this);
+        fridayRet.setOnItemSelectedListener(this);
+
+        builder.setPositiveButton("Update ", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        builder.setView(view);
+        builder.create().show();
+    }
+
+    private void showAddressUpdateDialog() {
+        //custom dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Update address");
+        View view = getLayoutInflater().inflate(R.layout.dialog_update_address, null);
+
+        //add spinner
+        final Spinner spinner = view.findViewById(R.id.districtUpdate);
+        ArrayAdapter<CharSequence> adapterAddress = ArrayAdapter.createFromResource(getActivity(),
+                R.array.districts, android.R.layout.simple_spinner_item);
+        adapterAddress.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapterAddress);
+
+        //add edittext
+        final EditText editText = view.findViewById(R.id.addressUpdate);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (adapterView.getId() == R.id.districtUpdate)
+                    district = (String) adapterView.getItemAtPosition(i);
+
+                HashMap<String, Object> result = new HashMap<>();
+                result.put("district", district);
+                databaseReference.child(user.getUid()).updateChildren(result);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        //add button in dialog to update
+        builder.setPositiveButton("Update ", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                address = editText.getText().toString().trim();
+                HashMap<String, Object> result = new HashMap<>();
+                result.put("address", address);
+                databaseReference.child(user.getUid()).updateChildren(result);
+            }
+        });
+        //add button in dialog to cancel
+        builder.setNegativeButton("Cancel ", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        builder.setView(view);
+        builder.create().show();
+    }
+
+    private void showNameUpdateDialog() {
+        //custom dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Update name");
         //set layout of dialog
         LinearLayout linearLayout = new LinearLayout(getActivity());
         linearLayout.setOrientation(LinearLayout.VERTICAL);
-        linearLayout.setPadding(10,10,10,10);
+        linearLayout.setPadding(10, 10, 10, 10);
         //add edit text
         final EditText editText = new EditText(getActivity());
-        editText.setHint("Enter " + key);
+        editText.setHint("Enter name");
         linearLayout.addView(editText);
 
         builder.setView(linearLayout);
@@ -299,11 +572,11 @@ public class ProfileFragment extends Fragment {
                 //input text from edit text
                 String value = editText.getText().toString().trim();
                 //validate id user enter something
-                if(!TextUtils.isEmpty(value)){
+                if (!TextUtils.isEmpty(value)) {
                     //update database name field
                     progressDialog.show();
                     HashMap<String, Object> result = new HashMap<>();
-                    result.put(key, value);
+                    result.put("name", value);
 
                     databaseReference.child(user.getUid()).updateChildren(result).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -318,12 +591,11 @@ public class ProfileFragment extends Fragment {
                                 public void onFailure(@NonNull Exception e) {
                                     //failed, show error message
                                     progressDialog.dismiss();
-                                    Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
-                }
-                else{
-                    Toast.makeText(getActivity(), "Please enter "+key, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Please enter name", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -331,11 +603,10 @@ public class ProfileFragment extends Fragment {
         builder.setNegativeButton("Cancel ", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
             }
         });
         //create and show dialog
-        builder.create().show();;
+        builder.create().show();
     }
 
     private void showImagePicDialog() {
@@ -511,15 +782,14 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    private void checkUserStatus(){
+    private void checkUserStatus() {
         //get current user
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        if (user != null){
+        if (user != null) {
             //user signed in, stay here
             //set email of logged in user
 
-        }
-        else{
+        } else {
             //user not signed in, go to main activity
             startActivity(new Intent(getActivity(), MainActivity.class));
             getActivity().finish();
@@ -545,11 +815,45 @@ public class ProfileFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //get item id
         int id = item.getItemId();
-        if (id == R.id.action_logout){
+        if (id == R.id.action_logout) {
             firebaseAuth.signOut();
             checkUserStatus();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        if (adapterView.getId() == R.id.mondayDep)
+            lesson_time_mondayDep = (String) adapterView.getItemAtPosition(i);
+        else if(adapterView.getId() == R.id.tuesdayDep)
+            lesson_time_tuesdayDep = (String) adapterView.getItemAtPosition(i);
+        else if(adapterView.getId() == R.id.wednesdayDep)
+            lesson_time_wednesdayDep = (String) adapterView.getItemAtPosition(i);
+        else if(adapterView.getId() == R.id.thursdayDep)
+            lesson_time_thursdayDep = (String) adapterView.getItemAtPosition(i);
+        else if(adapterView.getId() == R.id.fridayDep)
+            lesson_time_fridayDep = (String) adapterView.getItemAtPosition(i);
+        else if(adapterView.getId() == R.id.mondayRet)
+            lesson_time_mondayRet = (String) adapterView.getItemAtPosition(i);
+        else if(adapterView.getId() == R.id.tuesdayRet)
+            lesson_time_tuesdayRet = (String) adapterView.getItemAtPosition(i);
+        else if(adapterView.getId() == R.id.wednesdayRet)
+            lesson_time_wednesdayRet = (String) adapterView.getItemAtPosition(i);
+        else if(adapterView.getId() == R.id.thursdayRet)
+            lesson_time_thursdayRet = (String) adapterView.getItemAtPosition(i);
+        else if(adapterView.getId() == R.id.fridayRet)
+            lesson_time_fridayRet = (String) adapterView.getItemAtPosition(i);
+
+        ModelLessonHours modelLessonHours = new ModelLessonHours(user.getUid(), lesson_time_mondayDep, lesson_time_tuesdayDep,
+                lesson_time_wednesdayDep, lesson_time_thursdayDep, lesson_time_fridayDep, lesson_time_mondayRet,
+                lesson_time_tuesdayRet, lesson_time_wednesdayRet, lesson_time_thursdayRet, lesson_time_fridayRet);
+        databaseReferenceLessonHours.child(user.getUid()).setValue(modelLessonHours);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }
 

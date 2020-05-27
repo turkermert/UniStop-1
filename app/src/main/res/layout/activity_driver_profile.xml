@@ -130,15 +130,15 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/profileTop">
+        android:layout_below="@id/profileTop"
+        android:layout_marginTop="10dp">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <RelativeLayout
             android:id="@+id/userProfile"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/profileTop">
+            android:layout_height="wrap_content">
             <RelativeLayout
                 android:id="@+id/scheduleTv"
                 android:layout_width="match_parent"
@@ -354,7 +354,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Brand / Model: "
                                 android:layout_column="1"
-                                android:textSize="20sp"
+                                android:textSize="19sp"
                                 android:textStyle="bold"
                                 android:paddingLeft="5dp"/>
                             <TextView
@@ -365,7 +365,7 @@
                                 android:paddingRight="10dp"
                                 android:text="-"
                                 android:layout_column="2"
-                                android:textSize="20sp" />
+                                android:textSize="17sp" />
                         </TableRow>
                         <TableRow
                             android:layout_width="match_parent"
@@ -376,7 +376,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Plate:"
                                 android:layout_column="1"
-                                android:textSize="20sp"
+                                android:textSize="19sp"
                                 android:textStyle="bold"
                                 android:paddingLeft="5dp"/>
                             <TextView
@@ -387,7 +387,7 @@
                                 android:paddingRight="10dp"
                                 android:text="-"
                                 android:layout_column="2"
-                                android:textSize="20sp" />
+                                android:textSize="17sp" />
                         </TableRow>
                         <TableRow
                             android:layout_width="match_parent"
@@ -398,18 +398,19 @@
                                 android:layout_height="wrap_content"
                                 android:text="Color:"
                                 android:layout_column="1"
-                                android:textSize="20sp"
+                                android:textSize="19sp"
                                 android:textStyle="bold"
                                 android:paddingLeft="5dp"/>
+
                             <TextView
                                 android:id="@+id/carColorTv"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="27dp"
+                                android:layout_column="2"
                                 android:paddingLeft="10dp"
                                 android:paddingRight="10dp"
                                 android:text="-"
-                                android:layout_column="2"
-                                android:textSize="20sp" />
+                                android:textSize="17sp" />
                         </TableRow>
                         <TableRow
                             android:layout_width="match_parent"
@@ -420,7 +421,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Driver since:"
                                 android:layout_column="1"
-                                android:textSize="20sp"
+                                android:textSize="19sp"
                                 android:textStyle="bold"
                                 android:paddingLeft="5dp"/>
                             <TextView
@@ -431,7 +432,7 @@
                                 android:paddingRight="10dp"
                             android:text="-"
                             android:layout_column="2"
-                            android:textSize="20sp" />
+                            android:textSize="17sp" />
                     </TableRow>
                 </TableLayout>
             </RelativeLayout>

@@ -66,7 +66,7 @@ public class LessonhourActivity extends AppCompatActivity implements AdapterView
 
         ArrayAdapter<CharSequence> adapterAddress = ArrayAdapter.createFromResource(this,
                 R.array.districts, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapterAddress.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         mondayDep = findViewById(R.id.mondayDep);
         tuesdayDep = findViewById(R.id.tuesdayDep);
