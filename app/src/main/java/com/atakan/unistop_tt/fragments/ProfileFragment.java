@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -41,7 +40,6 @@ import com.atakan.unistop_tt.models.ModelLessonHours;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -464,6 +462,18 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
         final Spinner thursdayRet = view.findViewById(R.id.thursdayRet);
         final Spinner fridayRet = view.findViewById(R.id.fridayRet);
 
+       /* //send spinner and spinners and integer, integer is for define which spinner it is
+        showDefaultSelectionSchedule(mondayDep, 0);
+        showDefaultSelectionSchedule(tuesdayDep, 1);
+        showDefaultSelectionSchedule(wednesdayDep, 2);
+        showDefaultSelectionSchedule(thursdayDep, 3);
+        showDefaultSelectionSchedule(fridayDep, 4);
+        showDefaultSelectionSchedule(mondayRet, 5);
+        showDefaultSelectionSchedule(tuesdayRet, 6);
+        showDefaultSelectionSchedule(wednesdayRet, 7);
+        showDefaultSelectionSchedule(thursdayRet, 8);
+        showDefaultSelectionSchedule(fridayRet, 9);*/
+
         mondayDep.setAdapter(adapterSchedule);
         tuesdayDep.setAdapter(adapterSchedule);
         wednesdayDep.setAdapter(adapterSchedule);
@@ -486,6 +496,8 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
         thursdayRet.setOnItemSelectedListener(this);
         fridayRet.setOnItemSelectedListener(this);
 
+
+
         builder.setPositiveButton("Update ", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -495,6 +507,108 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
         builder.setView(view);
         builder.create().show();
     }
+
+    /*private void showDefaultSelectionSchedule(Spinner spinner, int i) {
+        //take departure and return times as string
+        String mondayDepString = mondayDepTv.getText().toString().trim();
+        String tuesdayDepString = tuesdayDepTv.getText().toString().trim();
+        String wednesdayDepString = wednesdayDepTv.getText().toString().trim();
+        String thursdayDepString = thursdayDepTv.getText().toString().trim();
+        String fridayDepString = fridayDepTv.getText().toString().trim();
+        String mondayRetString = mondayRetTv.getText().toString().trim();
+        String tuesdayRetString = tuesdayRetTv.getText().toString().trim();
+        String wednesdayRetString = wednesdayRetTv.getText().toString().trim();
+        String thursdayRetString = thursdayRetTv.getText().toString().trim();
+        String fridayRetString = fridayRetTv.getText().toString().trim();
+
+        //define position of departure and return times with defineSchedulePosition
+        int positionMondayDep = defineSchedulePosition(mondayDepString);
+        int positionTuesdayDep = defineSchedulePosition(tuesdayDepString);
+        int positionWednesdayDep = defineSchedulePosition(wednesdayDepString);
+        int positionThursdayDep = defineSchedulePosition(thursdayDepString);
+        int positionFridayDep = defineSchedulePosition(fridayDepString);
+        int positionMondayRet = defineSchedulePosition(mondayRetString);
+        int positionTuesdayRet = defineSchedulePosition(tuesdayRetString);
+        int positionWednesdayRet = defineSchedulePosition(wednesdayRetString);
+        int positionThursdayRet = defineSchedulePosition(thursdayRetString);
+        int positionFridayRet = defineSchedulePosition(fridayRetString);
+
+        //for every spinner, set default times
+        switch (i){
+            case 0:
+                spinner.setSelection(positionMondayDep);
+                break;
+            case 1:
+                spinner.setSelection(positionTuesdayDep);
+                break;
+            case 2:
+                spinner.setSelection(positionWednesdayDep);
+                break;
+            case 3:
+                spinner.setSelection(positionThursdayDep);
+                break;
+            case 4:
+                spinner.setSelection(positionFridayDep);
+                break;
+            case 5:
+                spinner.setSelection(positionMondayRet);
+                break;
+            case 6:
+                spinner.setSelection(positionTuesdayRet);
+                break;
+            case 7:
+                spinner.setSelection(positionWednesdayRet);
+                break;
+            case 8:
+                spinner.setSelection(positionThursdayRet);
+                break;
+            case 9:
+                spinner.setSelection(positionFridayRet);
+                break;
+        }
+    }*/
+
+    /*private int defineSchedulePosition(String string) {
+        //take position of every times array and return position
+        int position = 0;
+        switch (string) {
+            case "-":
+                position = 0;
+                break;
+            case "09:30":
+                position = 1;
+                break;
+            case "10:30":
+                position = 2;
+                break;
+            case "11:30":
+                position = 3;
+                break;
+            case "12:30":
+                position = 4;
+                break;
+            case "13:30":
+                position = 5;
+                break;
+            case "14:30":
+                position = 6;
+                break;
+            case "15:30":
+                position = 7;
+                break;
+            case "16:30":
+                position = 8;
+                break;
+            case "17:30":
+                position = 9;
+                break;
+            case "18:30":
+                position = 10;
+                break;
+        }
+        return position;
+    }*/
+
 
     private void showAddressUpdateDialog() {
         //custom dialog
@@ -508,6 +622,8 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
                 R.array.districts, android.R.layout.simple_spinner_item);
         adapterAddress.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapterAddress);
+
+        showDefaultSelectionDistrict(spinner);
 
         //add edittext
         final EditText editText = view.findViewById(R.id.addressUpdate);
@@ -548,6 +664,59 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
 
         builder.setView(view);
         builder.create().show();
+    }
+
+     private void showDefaultSelectionDistrict(Spinner spinner) {
+        String districtString = districtTv.getText().toString().trim();
+        int position = 0;
+        switch (districtString){
+            case "Çankaya" :
+                position = 0;
+                break;
+            case "Akyurt" :
+                position = 1;
+                break;
+            case "Altındağ" :
+                position = 2;
+                break;
+            case "Ayaş" :
+                position = 3;
+                break;
+            case "Bala" :
+                position = 4;
+                break;
+            case "Çubuk" :
+                position = 5;
+                break;
+            case "Elmadağ" :
+                position = 6;
+                break;
+            case "Etimesgut" :
+                position = 7;
+                break;
+            case "Gölbaşı" :
+                position = 8;
+                break;
+            case "Kalecik" :
+                position = 9;
+                break;
+            case "Kazan" :
+                position = 10;
+                break;
+            case "Keçiören" :
+                position = 11;
+                break;
+            case "Mamak" :
+                position = 12;
+                break;
+            case "Sincan" :
+                position = 13;
+                break;
+            case "Yenimahalle" :
+                position = 14;
+                break;
+        }
+        spinner.setSelection(position);
     }
 
     private void showNameUpdateDialog() {
