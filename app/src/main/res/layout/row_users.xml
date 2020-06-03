@@ -35,7 +35,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="User Type" />
-
+            <TextView
+                android:id="@+id/districtTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="District" />
         </LinearLayout>
 
     </LinearLayout>

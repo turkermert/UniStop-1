@@ -46,10 +46,16 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
         String userImage = userList.get(position).getImage();
         String userName = userList.get(position).getName();
         final String userType = userList.get(position).getUsertype();
+        String userDistrict = userList.get(position).getDistrict();
+
+        //set usertype's first letter capital
+        String userTypeCapital;
+        userTypeCapital = userType.substring(0, 1).toUpperCase() + userType.substring(1).toLowerCase();
 
         //set data
         myHolder.mNameTv.setText(userName);
-        myHolder.mUsertypeTv.setText(userType);
+        myHolder.mUsertypeTv.setText(userTypeCapital);
+        myHolder.mDistrictTv.setText(userDistrict);
         try {
             Picasso.get().load(userImage)
                     .placeholder(R.drawable.ic_default_img)
@@ -88,7 +94,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
     class MyHolder extends RecyclerView.ViewHolder{
 
         ImageView mAvatarIv;
-        TextView mNameTv, mUsertypeTv;
+        TextView mNameTv, mUsertypeTv, mDistrictTv;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
@@ -97,6 +103,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
             mAvatarIv = itemView.findViewById(R.id.avatarIv);
             mNameTv = itemView.findViewById(R.id.nameTv);
             mUsertypeTv = itemView.findViewById(R.id.usertypeTv);
+            mDistrictTv = itemView.findViewById(R.id.districtTv);
         }
     }
 }

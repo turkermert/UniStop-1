@@ -167,11 +167,15 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
                     String userType = "" + ds.child("usertype").getValue();
                     String image = "" + ds.child("image").getValue();
 
+                    //set usertype's first letter capital
+                    userType = userType.substring(0, 1).toUpperCase() + userType.substring(1).toLowerCase();
+
                     //set data
                     nameTv.setText(name);
                     districtTv.setText(district);
                     addressTv.setText(address);
                     userTypeTv.setText(userType);
+
                     /*String realName=TextUtils.split(email,"@")[0].split("\\.")[1];       //wite name and surname automatically
                     String realSurname=TextUtils.split(email,"@")[0].split("\\.")[0];
                     emailTv.setText(email+"\n"+realName.substring(0, 1).toUpperCase()+ realName.substring(1)+" "+realSurname.substring(0, 1).toUpperCase()+ realSurname.substring(1));*/
@@ -446,10 +450,6 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
         builder.setTitle("Update schedule");
         View view = getLayoutInflater().inflate(R.layout.dialog_update_schedule, null);
 
-        ArrayAdapter<CharSequence> adapterSchedule = ArrayAdapter.createFromResource(getActivity(),
-                R.array.times, android.R.layout.simple_spinner_item);
-        adapterSchedule.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         //add spinners
         final Spinner mondayDep = view.findViewById(R.id.mondayDep);
         final Spinner tuesdayDep = view.findViewById(R.id.tuesdayDep);
@@ -462,17 +462,9 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
         final Spinner thursdayRet = view.findViewById(R.id.thursdayRet);
         final Spinner fridayRet = view.findViewById(R.id.fridayRet);
 
-       /* //send spinner and spinners and integer, integer is for define which spinner it is
-        showDefaultSelectionSchedule(mondayDep, 0);
-        showDefaultSelectionSchedule(tuesdayDep, 1);
-        showDefaultSelectionSchedule(wednesdayDep, 2);
-        showDefaultSelectionSchedule(thursdayDep, 3);
-        showDefaultSelectionSchedule(fridayDep, 4);
-        showDefaultSelectionSchedule(mondayRet, 5);
-        showDefaultSelectionSchedule(tuesdayRet, 6);
-        showDefaultSelectionSchedule(wednesdayRet, 7);
-        showDefaultSelectionSchedule(thursdayRet, 8);
-        showDefaultSelectionSchedule(fridayRet, 9);*/
+        ArrayAdapter<CharSequence> adapterSchedule = ArrayAdapter.createFromResource(getActivity(),
+                R.array.times, android.R.layout.simple_spinner_item);
+        adapterSchedule.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         mondayDep.setAdapter(adapterSchedule);
         tuesdayDep.setAdapter(adapterSchedule);
@@ -484,6 +476,30 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
         wednesdayRet.setAdapter(adapterSchedule);
         thursdayRet.setAdapter(adapterSchedule);
         fridayRet.setAdapter(adapterSchedule);
+
+
+        String mondayDepString = mondayDepTv.getText().toString().trim();
+        String tuesdayDepString = tuesdayDepTv.getText().toString().trim();
+        String wednesdayDepString = wednesdayDepTv.getText().toString().trim();
+        String thursdayDepString = thursdayDepTv.getText().toString().trim();
+        String fridayDepString = fridayDepTv.getText().toString().trim();
+        String mondayRetString = mondayRetTv.getText().toString().trim();
+        String tuesdayRetString = tuesdayRetTv.getText().toString().trim();
+        String wednesdayRetString = wednesdayRetTv.getText().toString().trim();
+        String thursdayRetString = thursdayRetTv.getText().toString().trim();
+        String fridayRetString = fridayRetTv.getText().toString().trim();
+
+        //send spinner and spinners value
+        showDefaultSelectionSchedule(mondayDep, mondayDepString);
+        showDefaultSelectionSchedule(tuesdayDep, tuesdayDepString);
+        showDefaultSelectionSchedule(wednesdayDep,wednesdayDepString);
+        showDefaultSelectionSchedule(thursdayDep, thursdayDepString);
+        showDefaultSelectionSchedule(fridayDep, fridayDepString);
+        showDefaultSelectionSchedule(mondayRet, mondayRetString);
+        showDefaultSelectionSchedule(tuesdayRet, tuesdayRetString);
+        showDefaultSelectionSchedule(wednesdayRet, wednesdayRetString);
+        showDefaultSelectionSchedule(thursdayRet, thursdayRetString);
+        showDefaultSelectionSchedule(fridayRet, fridayRetString);
 
         mondayDep.setOnItemSelectedListener(this);
         tuesdayDep.setOnItemSelectedListener(this);
@@ -497,8 +513,13 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
         fridayRet.setOnItemSelectedListener(this);
 
 
-
         builder.setPositiveButton("Update ", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        //add button in dialog to cancel
+        builder.setNegativeButton("Cancel ", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
             }
@@ -508,69 +529,8 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
         builder.create().show();
     }
 
-    /*private void showDefaultSelectionSchedule(Spinner spinner, int i) {
-        //take departure and return times as string
-        String mondayDepString = mondayDepTv.getText().toString().trim();
-        String tuesdayDepString = tuesdayDepTv.getText().toString().trim();
-        String wednesdayDepString = wednesdayDepTv.getText().toString().trim();
-        String thursdayDepString = thursdayDepTv.getText().toString().trim();
-        String fridayDepString = fridayDepTv.getText().toString().trim();
-        String mondayRetString = mondayRetTv.getText().toString().trim();
-        String tuesdayRetString = tuesdayRetTv.getText().toString().trim();
-        String wednesdayRetString = wednesdayRetTv.getText().toString().trim();
-        String thursdayRetString = thursdayRetTv.getText().toString().trim();
-        String fridayRetString = fridayRetTv.getText().toString().trim();
-
-        //define position of departure and return times with defineSchedulePosition
-        int positionMondayDep = defineSchedulePosition(mondayDepString);
-        int positionTuesdayDep = defineSchedulePosition(tuesdayDepString);
-        int positionWednesdayDep = defineSchedulePosition(wednesdayDepString);
-        int positionThursdayDep = defineSchedulePosition(thursdayDepString);
-        int positionFridayDep = defineSchedulePosition(fridayDepString);
-        int positionMondayRet = defineSchedulePosition(mondayRetString);
-        int positionTuesdayRet = defineSchedulePosition(tuesdayRetString);
-        int positionWednesdayRet = defineSchedulePosition(wednesdayRetString);
-        int positionThursdayRet = defineSchedulePosition(thursdayRetString);
-        int positionFridayRet = defineSchedulePosition(fridayRetString);
-
-        //for every spinner, set default times
-        switch (i){
-            case 0:
-                spinner.setSelection(positionMondayDep);
-                break;
-            case 1:
-                spinner.setSelection(positionTuesdayDep);
-                break;
-            case 2:
-                spinner.setSelection(positionWednesdayDep);
-                break;
-            case 3:
-                spinner.setSelection(positionThursdayDep);
-                break;
-            case 4:
-                spinner.setSelection(positionFridayDep);
-                break;
-            case 5:
-                spinner.setSelection(positionMondayRet);
-                break;
-            case 6:
-                spinner.setSelection(positionTuesdayRet);
-                break;
-            case 7:
-                spinner.setSelection(positionWednesdayRet);
-                break;
-            case 8:
-                spinner.setSelection(positionThursdayRet);
-                break;
-            case 9:
-                spinner.setSelection(positionFridayRet);
-                break;
-        }
-    }*/
-
-    /*private int defineSchedulePosition(String string) {
-        //take position of every times array and return position
-        int position = 0;
+    private void showDefaultSelectionSchedule(Spinner spinner, String string) {
+        int position = 3;
         switch (string) {
             case "-":
                 position = 0;
@@ -606,9 +566,8 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
                 position = 10;
                 break;
         }
-        return position;
-    }*/
-
+        spinner.setSelection(position);
+    }
 
     private void showAddressUpdateDialog() {
         //custom dialog
@@ -627,6 +586,26 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
 
         //add edittext
         final EditText editText = view.findViewById(R.id.addressUpdate);
+
+        //take address detail from db and show address details as default
+        Query query_ad = databaseReference.orderByChild("uid").equalTo(uid);
+        query_ad.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    //get data
+                    String addressDetail = "" + ds.child("address").getValue();
+
+                    //set data
+                    editText.setText(addressDetail);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
