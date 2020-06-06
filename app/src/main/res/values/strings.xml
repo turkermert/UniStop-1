@@ -35,4 +35,24 @@
         <item>Sincan</item>
         <item>Yenimahalle</item>
     </string-array>
+
+    <string-array name="districtsFilter">
+        <item>All</item>
+        <item>Akyurt</item>
+        <item>Altındağ</item>
+        <item>Ayaş</item>
+        <item>Bala</item>
+        <item>Çankaya</item>
+        <item>Çubuk</item>
+        <item>Elmadağ</item>
+        <item>Etimesgut</item>
+        <item>Gölbaşı</item>
+        <item>Kalecik</item>
+        <item>Kazan</item>
+        <item>Keçiören</item>
+        <item>Mamak</item>
+        <item>Sincan</item>
+        <item>Yenimahalle</item>
+    </string-array>
+    <string name="title_activity_maps">Map</string>
 </resources>

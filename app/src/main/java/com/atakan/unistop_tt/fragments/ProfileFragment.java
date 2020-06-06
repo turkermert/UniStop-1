@@ -3,6 +3,7 @@ package com.atakan.unistop_tt.fragments;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -947,6 +948,7 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true); //to show menu option in fragment
+
         super.onCreate(savedInstanceState);
     }
 
@@ -954,11 +956,23 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    //handle menu item click
+    //set search menu item invisible
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        MenuItem action_search = menu.findItem(R.id.action_search);
+        MenuItem action_filter = menu.findItem(R.id.action_filter);
+        action_search.setVisible(false);
+        action_filter.setVisible(false);
 
+        super.onPrepareOptionsMenu(menu);
+    }
+
+
+    //handle menu item click
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //get item id

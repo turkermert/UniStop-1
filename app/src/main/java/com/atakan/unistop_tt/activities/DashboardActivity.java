@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import com.atakan.unistop_tt.fragments.ChatListFragment;
 import com.atakan.unistop_tt.fragments.HomeFragment;
+import com.atakan.unistop_tt.fragments.MapFragment;
 import com.atakan.unistop_tt.fragments.ProfileFragment;
 import com.atakan.unistop_tt.R;
 import com.atakan.unistop_tt.fragments.UserFragment;
@@ -57,7 +58,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         //home fragment transaction (default on start)
         actionBar.setTitle("Home");
-        HomeFragment fragment1 = new HomeFragment();
+        MapFragment fragment1 = new MapFragment();
         FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
         ft1.replace(R.id.content, fragment1, "");
         ft1.commit();
@@ -72,7 +73,8 @@ public class DashboardActivity extends AppCompatActivity {
                 case R.id.nav_home:
                     //home fragment transaction
                     actionBar.setTitle("Home");
-                    HomeFragment fragment1 = new HomeFragment();
+                    MapFragment fragment1 = new MapFragment();
+                    //HomeFragment fragment1 = new HomeFragment();
                     FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
                     ft1.replace(R.id.content, fragment1, "");
                     ft1.commit();
