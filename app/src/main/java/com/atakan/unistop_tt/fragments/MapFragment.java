@@ -1,47 +1,76 @@
 package com.atakan.unistop_tt.fragments;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.location.LocationListener;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.atakan.unistop_tt.R;
+import com.atakan.unistop_tt.activities.ChatActivity;
+import com.atakan.unistop_tt.activities.DriverProfileActivity;
 import com.atakan.unistop_tt.activities.MainActivity;
+import com.atakan.unistop_tt.activities.PassengerProfileActivity;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApi;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+import java.util.ArrayList;
+import java.util.List;
+
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     //private static MapFragment INSTANCE = null;
 
     View view;
@@ -49,65 +78,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     GoogleMap map;
     MapView mapView;
 
-    GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
+    FusedLocationProviderClient mFusedLocationClient;
 
     FirebaseAuth firebaseAuth;
     String uid = firebaseAuth.getInstance().getCurrentUser().getUid();
 
+    Button hitchhikeBtn;
+
+    LatLng pickupLocation;
+
+    LinearLayout userInfoMapAll, userInfoMapClick;
+    ImageView userProfileImage;
+    TextView userName, phoneNumber;
+    Button sendMessageBtn;
+
 
     public MapFragment() {
     }
-
-//    public static  MapFragment getINSTANCE(){
-//        if (INSTANCE == null)
-//            INSTANCE = new MapFragment();
-//        return INSTANCE;
-//    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        MapsInitializer.initialize(getContext());
-        map = googleMap;
-
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
-        }
-
-        map.setMyLocationEnabled(true);
-
-    }
-
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        mGoogleApiClient.connect();
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_map, container, false);
-        buildGoogleApiClient();
-
-        mapView = view.findViewById(R.id.mapsView);
-
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
-        }else{
-            mapView.getMapAsync(this);
-        }
-
-
-        return view;
-    }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -115,21 +104,544 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         super.onCreate(savedInstanceState);
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_map, container, false);
 
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        mapView = view.findViewById(R.id.mapsView);
+        hitchhikeBtn = view.findViewById(R.id.hitchhikeBtn);
+
+        userInfoMapAll = view.findViewById(R.id.userInfoMapAll);
+        userInfoMapClick = view.findViewById(R.id.userInfoMapClick);
+        userProfileImage = view.findViewById(R.id.userProfileImage);
+        userName = view.findViewById(R.id.userName);
+        phoneNumber = view.findViewById(R.id.phoneNumber);
+        sendMessageBtn = view.findViewById(R.id.sendMessageBtn);
+
+        mapView.getMapAsync(this);
+
+        //take data from database
+        DatabaseReference referenceUser = FirebaseDatabase.getInstance().getReference("Users");
+        Query query = referenceUser.orderByChild("uid").equalTo(uid);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //check until required data get
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    //get data
+                    String userType = "" + ds.child("usertype").getValue();
+                    if (userType.equals("driver")) {
+                        hitchhikeBtn.setVisibility(View.INVISIBLE);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+        hitchhikeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("PassengerRequest");
+                GeoFire geoFire = new GeoFire(reference);
+                geoFire.setLocation(uid, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()), new GeoFire.CompletionListener() {
+                    @Override
+                    public void onComplete(String key, DatabaseError error) {
+                    }
+                });
+
+                pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                map.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup here"));
+
+                hitchhikeBtn.setText("Hitchiked...");
+            }
+        });
+
+        return view;
+    }
+
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        MapsInitializer.initialize(getContext());
+        map = googleMap;
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(1000); //refresh map per 1 seconds, then it will change with 15 min
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            } else {
+                checkLocationPermission();
+            }
+        }
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+        map.setMyLocationEnabled(true);
+    }
+
+    //on location changed
+    LocationCallback mLocationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            for (final Location location : locationResult.getLocations()) {
+
+                //take data from database
+                DatabaseReference referenceUser = FirebaseDatabase.getInstance().getReference("Users");
+                Query query = referenceUser.orderByChild("uid").equalTo(uid);
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        //check until required data get
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            //get data
+                            String userType = "" + ds.child("usertype").getValue();
+                            mLastLocation = location;
+
+                            LatLng latLng = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude());
+//                            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+//                            builder.include(latLng);
+//                            LatLngBounds bounds = builder.build();
+//
+//                            int width = getResources().getDisplayMetrics().widthPixels;
+//                            int padding = (int) (width*0.2);
+//
+//                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+//                            map.animateCamera(cameraUpdate);
+
+//                            LatLng latLng = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude());
+//                            map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+//                            map.animateCamera(CameraUpdateFactory.zoomTo(11));
+
+
+                            if (userType.equals("driver")) {
+                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("DriversLocation");
+                                GeoFire geoFire = new GeoFire(reference);
+                                geoFire.setLocation(uid, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+                                    @Override
+                                    public void onComplete(String key, DatabaseError error) {
+                                    }
+                                });
+                                getPassengerRequestAround();
+                            } else if (userType.equals("passenger")) {
+                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("PassengersLocation");
+                                GeoFire geoFire = new GeoFire(reference);
+                                geoFire.setLocation(uid, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+                                    @Override
+                                    public void onComplete(String key, DatabaseError error) {
+                                    }
+                                });
+                                getDriversAround();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }
+    };
+
+
+    private void checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Give permission")
+                        .setMessage("You should give permission in order to use map")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                            }
+                        })
+                        .create().show();
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+                        map.setMyLocationEnabled(true);
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Please provide the permission", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+        }
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mapView = view.findViewById(R.id.mapsView);
-
-        if(mapView != null){
+        if (mapView != null) {
             mapView.onCreate(null);
             mapView.onResume();
             mapView.getMapAsync(this);
         }
     }
 
+//    //when user stop the application, location information will not store in db
+//    //realtime
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("UsersLocation");
+//
+//        GeoFire geoFire = new GeoFire(reference);
+//        geoFire.removeLocation(uid);
+//    }
 
+
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    //drawing circle and show available users using GeoQuery library
+    List<Marker> markerList = new ArrayList<Marker>();
+
+    private void getDriversAround() {
+        DatabaseReference driversLocation = FirebaseDatabase.getInstance().getReference().child("DriversLocation");
+        GeoFire geoFire = new GeoFire(driversLocation);
+        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()), 50);
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+
+            //will return all drivers locations
+            //key is uid, location is user location on db
+            @Override
+            public void onKeyEntered(final String key, GeoLocation location) {
+                for (Marker markerIt : markerList) {
+                    if (markerIt.getTag().equals(key))
+                        return;
+                }
+
+                LatLng userLocation = new LatLng(location.latitude, location.longitude);
+
+                final Marker driverMarker = map.addMarker(new MarkerOptions().position(userLocation).title(key)
+                        .icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_car_vector)));
+
+                driverMarker.setTag(key);
+
+                map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker) {
+//                        int keyUid = (int)(driverMarker.getTag());
+                        userInfoMapAll.setVisibility(View.VISIBLE);
+                        userInfoMapClick.setVisibility(View.VISIBLE);
+                        hitchhikeBtn.setVisibility(View.INVISIBLE);
+
+                        userInfoMapClick.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                //take data from database
+                                DatabaseReference referenceUser = FirebaseDatabase.getInstance().getReference("Users");
+                                Query query = referenceUser.orderByChild("uid").equalTo(key);
+                                query.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        //check until required data get
+                                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                            //get data
+                                            String userType = "" + ds.child("usertype").getValue();
+
+                                            //check users type
+                                            if(userType.equals("passenger")){
+                                                Intent intent = new Intent(getActivity(), PassengerProfileActivity.class);
+                                                intent.putExtra("receiverUid", key);
+                                                getActivity().startActivity(intent);
+                                            }
+                                            else{
+                                                Intent intent = new Intent(getActivity(), DriverProfileActivity.class);
+                                                intent.putExtra("receiverUid", key);
+                                                getActivity().startActivity(intent);
+                                            }
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                        });
+
+                        sendMessageBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                                intent.putExtra("receiverUid", key);
+                                getActivity().startActivity(intent);
+                            }
+                        });
+
+                        //take data from database
+                        DatabaseReference referenceUser = FirebaseDatabase.getInstance().getReference("Users");
+                        Query query = referenceUser.orderByChild("uid").equalTo(key);
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                //check until required data get
+                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    //get data
+                                    String name = "" + ds.child("name").getValue();
+                                    String image = "" + ds.child("image").getValue();
+                                    //Todo: phone will be added here
+
+                                    //set data
+                                    userName.setText(name);
+                                    try {
+                                        //if image is received then set
+                                        Picasso.get().load(image).into(userProfileImage);
+                                    } catch (Exception e) {
+                                        //if there is any exception while getting image then set default
+                                        Picasso.get().load(R.drawable.ic_default_img_white).into(userProfileImage);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                            }
+                        });
+                        return false;
+                    }
+                });
+
+                markerList.add(driverMarker);
+            }
+
+            //when user stop using application marker will be deleted on the map
+            @Override
+            public void onKeyExited(String key) {
+                for (Marker markerIt : markerList) {
+                    if (markerIt.getTag().equals(key)) {
+                        markerIt.remove();
+                        markerList.remove(markerIt);
+                        return;
+                    }
+                }
+            }
+
+            //when users change locations
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+                for (Marker markerIt : markerList) {
+                    if (markerIt.getTag().equals(key)) {
+                        markerIt.setPosition(new LatLng(location.latitude, location.longitude));
+                    }
+                }
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+    }
+
+    //drawing circle and show available users using GeoQuery library
+    List<Marker> markerListPr = new ArrayList<Marker>();
+
+    private void getPassengerRequestAround() {
+        DatabaseReference usersLocation = FirebaseDatabase.getInstance().getReference().child("PassengerRequest");
+        GeoFire geoFire = new GeoFire(usersLocation);
+        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()), 50);
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+
+            //will return all users locations
+            //key is uid, location is user location on db
+            @Override
+            public void onKeyEntered(final String key, GeoLocation location) {
+                for (Marker markerIt : markerListPr) {
+                    if (markerIt.getTag().equals(key))
+                        return;
+                }
+
+                LatLng userLocation = new LatLng(location.latitude, location.longitude);
+
+                final Marker passengerRequestMarker = map.addMarker(new MarkerOptions().position(userLocation).title("Show Profile"));
+                passengerRequestMarker.setTag(key);
+
+                map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker) {
+                        userInfoMapAll.setVisibility(View.VISIBLE);
+                        userInfoMapClick.setVisibility(View.VISIBLE);
+                        hitchhikeBtn.setVisibility(View.INVISIBLE);
+
+                        userInfoMapClick.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                //take data from database
+                                DatabaseReference referenceUser = FirebaseDatabase.getInstance().getReference("Users");
+                                Query query = referenceUser.orderByChild("uid").equalTo(key);
+                                query.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        //check until required data get
+                                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                            //get data
+                                            String userType = "" + ds.child("usertype").getValue();
+
+                                            //check users type
+                                            if(userType.equals("passenger")){
+                                                Intent intent = new Intent(getActivity(), PassengerProfileActivity.class);
+                                                intent.putExtra("receiverUid", key);
+                                                getActivity().startActivity(intent);
+                                            }
+                                            else{
+                                                Intent intent = new Intent(getActivity(), DriverProfileActivity.class);
+                                                intent.putExtra("receiverUid", key);
+                                                getActivity().startActivity(intent);
+                                            }
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                        });
+
+                        sendMessageBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                                intent.putExtra("receiverUid", key);
+                                getActivity().startActivity(intent);
+                            }
+                        });
+
+                        //take data from database
+                        DatabaseReference referenceUser = FirebaseDatabase.getInstance().getReference("Users");
+                        Query query = referenceUser.orderByChild("uid").equalTo(key);
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                //check until required data get
+                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    //get data
+                                    String name = "" + ds.child("name").getValue();
+                                    String image = "" + ds.child("image").getValue();
+                                    //Todo: phone will be added here
+
+                                    //set data
+                                    userName.setText(name);
+                                    try {
+                                        //if image is received then set
+                                        Picasso.get().load(image).into(userProfileImage);
+                                    } catch (Exception e) {
+                                        //if there is any exception while getting image then set default
+                                        Picasso.get().load(R.drawable.ic_default_img_white).into(userProfileImage);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                        return false;
+                    }
+                });
+
+                markerListPr.add(passengerRequestMarker);
+
+
+            }
+
+            //when user stop using application marker will be deleted on the map
+            @Override
+            public void onKeyExited(String key) {
+                for (Marker markerIt : markerListPr) {
+                    if (markerIt.getTag().equals(key)) {
+                        markerIt.remove();
+                        markerListPr.remove(markerIt);
+                        return;
+                    }
+                }
+            }
+
+            //when users change locations
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+                for (Marker markerIt : markerListPr) {
+                    if (markerIt.getTag().equals(key)) {
+                        markerIt.setPosition(new LatLng(location.latitude, location.longitude));
+                    }
+                }
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+    }
+
+
+    private void checkUserStatus() {
+        //get current user
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user != null) {
+            //user signed in, stay here
+            //set email of logged in user
+
+        } else {
+            //user not signed in, go to main activity
+            startActivity(new Intent(getActivity(), MainActivity.class));
+            getActivity().finish();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        //get item id
+        int id = item.getItemId();
+        if (id == R.id.action_logout) {
+            firebaseAuth.signOut();
+            checkUserStatus();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     //inflate options menu
     @Override
@@ -149,107 +661,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         super.onPrepareOptionsMenu(menu);
     }
 
-
-
     @Override
-    public void onLocationChanged(Location location) {
-        //location change every 15 seconds
-        mLastLocation = location;
+    public boolean onMarkerClick(Marker marker) {
 
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        map.animateCamera(CameraUpdateFactory.zoomTo(13));
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("UsersLocation");
-
-        GeoFire geoFire = new GeoFire(reference);
-        geoFire.setLocation(uid, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener(){
-            @Override
-            public void onComplete(String key, DatabaseError error) {
-            }
-        });
-
-    }
-
-
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(1000); //refresh map per 15 minutes, then it will change with 15 min
-        mLocationRequest.setFastestInterval(1000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
-
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
-        }
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this); //refresh location instead of interval
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    final int LOCATION_REQUEST_CODE = 1;
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case LOCATION_REQUEST_CODE:{
-                if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    mapView.getMapAsync(this);
-                }
-                else{
-                    Toast.makeText(getContext(), "Please provide the permission", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            }
-        }
-    }
-
-//    //when user stop the application, location information will not store in db
-//    //realtime
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//
-//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("UsersLocation");
-//
-//        GeoFire geoFire = new GeoFire(reference);
-//        geoFire.removeLocation(uid);
-//    }
-
-    private void checkUserStatus(){
-        //get current user
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        if (user != null){
-            //user signed in, stay here
-            //set email of logged in user
-
-        }
-        else{
-            //user not signed in, go to main activity
-            startActivity(new Intent(getActivity(), MainActivity.class));
-            getActivity().finish();
-        }
-    }
-
-        @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        //get item id
-        int id = item.getItemId();
-        if (id == R.id.action_logout){
-            firebaseAuth.signOut();
-            checkUserStatus();
-        }
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 }
+

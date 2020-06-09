@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/hitchhikeBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hitchhike"
+        android:textAllCaps="false"
+        android:layout_gravity="bottom"
+        style="@style/Widget.AppCompat.Button.Colored"/>
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapsView"
@@ -9,4 +18,53 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</RelativeLayout>
+    <LinearLayout
+        android:id="@+id/userInfoMapAll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colorWhite"
+        android:visibility="gone"
+        android:layout_gravity="bottom">
+        <LinearLayout
+            android:id="@+id/userInfoMapClick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/colorWhite"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/userProfileImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_default_img_white"
+                android:padding="20dp"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="40sp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/userName"
+                    android:paddingBottom="20dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/phoneNumber"
+                    android:text="-"
+                    android:paddingBottom="20dp"/>
+            </LinearLayout>
+        </LinearLayout>
+        <Button
+            android:id="@+id/sendMessageBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Send Message"
+            style="@style/Widget.AppCompat.Button.Colored">
+        </Button>
+    </LinearLayout>
+
+
+</FrameLayout>
