@@ -98,7 +98,7 @@
                             android:id="@+id/fab"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Edıt Profıle"
+                            android:text="Edit Profile"
                             android:padding="10dp"
                             android:textSize="15sp"
                             android:layout_marginTop="5dp"

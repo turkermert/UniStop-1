@@ -270,10 +270,10 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
             @Override
             public void onClick(View view) {
 
-                if (userTypeTv.getText().toString().trim().equals("passenger")){
+                if (userTypeTv.getText().toString().trim().equals("Passenger")){
                     showEditProfileDialog();
                 }
-                else if (userTypeTv.getText().toString().trim().equals("driver")){
+                else if (userTypeTv.getText().toString().trim().equals("Driver")){
                     showEditDriverProfileDialog();
                 }
             }

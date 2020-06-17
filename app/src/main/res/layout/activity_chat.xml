@@ -6,14 +6,22 @@
     android:layout_height="match_parent"
     android:background="#F1EDED"
     tools:context=".activities.ChatActivity">
-    
-    <androidx.appcompat.widget.Toolbar
+
+
+
+    <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:background="@color/colorPrimaryDark"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-        
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:orientation="horizontal"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <!-- receiver profile picture -->
         <com.blogspot.atifsoftwares.circularimageview.CircularImageView
             android:id="@+id/profileIv"
@@ -24,12 +32,13 @@
             app:c_background_color="@color/colorPrimaryDark"/>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
             android:layout_marginLeft="20dp">
-            
+
             <!--Receiver name-->
             <TextView
                 android:id="@+id/nameTv"
@@ -47,7 +56,17 @@
                 android:text="Online"
                 android:textColor="@color/colorWhite"/>
         </LinearLayout>
-    </androidx.appcompat.widget.Toolbar>
+        <ImageView
+            android:layout_marginEnd="5dp"
+            android:id="@+id/blockIv"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_unblocked_green"
+            android:layout_marginRight="5dp" />
+
+    </LinearLayout>
+
 
     <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
@@ -88,3 +107,4 @@
     </LinearLayout>
 
 </RelativeLayout>
+

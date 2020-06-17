@@ -4,11 +4,12 @@ public class ModelUser {
 
     //use same name as in firebase db
     String name, email, phone, image, usertype, uid, district;
+    boolean isBlocked = false;
 
     public ModelUser() {
     }
 
-    public ModelUser(String name, String email, String phone, String image, String usertype, String uid, String district) {
+    public ModelUser(String name, String email, String phone, String image, String usertype, String uid, String district, boolean isBlocked) {
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -16,14 +17,7 @@ public class ModelUser {
         this.usertype = usertype;
         this.uid = uid;
         this.district = district;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
+        this.isBlocked = isBlocked;
     }
 
     public String getName() {
@@ -66,6 +60,14 @@ public class ModelUser {
         this.usertype = usertype;
     }
 
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
     public String getDistrict() {
         return district;
     }
@@ -73,4 +75,13 @@ public class ModelUser {
     public void setDistrict(String district) {
         this.district = district;
     }
+
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
+    }
 }
+
