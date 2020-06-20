@@ -398,6 +398,15 @@ public class UserFragment extends Fragment {
         });
     }
 
+    //set logout menu item invisible
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        MenuItem action_logout = menu.findItem(R.id.action_logout);
+        action_logout.setVisible(false);
+
+        super.onPrepareOptionsMenu(menu);
+    }
+
 
     //handle menu item click
     @Override

@@ -58,7 +58,7 @@ public class DashboardActivity extends AppCompatActivity {
         navigationView.setOnNavigationItemSelectedListener(selectedListener);
 
         //home fragment transaction (default on start)
-        actionBar.setTitle("Home");
+        actionBar.setTitle("Map");
         MapFragment fragment1 = new MapFragment();
         FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
         ft1.replace(R.id.content, fragment1, "");
@@ -91,7 +91,7 @@ public class DashboardActivity extends AppCompatActivity {
             switch (menuItem.getItemId()){
                 case R.id.nav_home:
                     //home fragment transaction
-                    actionBar.setTitle("Home");
+                    actionBar.setTitle("Map");
                     MapFragment fragment1 = new MapFragment();
                     //HomeFragment fragment1 = new HomeFragment();
                     FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();

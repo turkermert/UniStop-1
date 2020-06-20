@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -90,12 +91,12 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
                 //atılım email check condition
-                /*
+
                 else if(!TextUtils.split(email,"@")[1].equals("student.atilim.edu.tr")){
 
                     Toast.makeText(getApplicationContext(), "Sadece Atılım e-mail geçerlidir.", Toast.LENGTH_LONG).show();
                     return;
-                }*/
+                }
 
                 else{
                     //register the user, write it db with registerUser method
@@ -134,9 +135,9 @@ public class RegisterActivity extends AppCompatActivity {
                             String email = user.getEmail();
                             String uid = user.getUid();
 
-                            /*
+
                             //send email authontication
-                            sendEmail();*/
+                            sendEmail();
 
                             //using hashmap
                             HashMap<Object, String> hashMap = new HashMap<>();
@@ -178,8 +179,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-
-    /*
     //send email authontication method
     private void sendEmail(){
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -194,8 +193,6 @@ public class RegisterActivity extends AppCompatActivity {
             });
         }}
 
-
-     */
 
     @Override
     public boolean onSupportNavigateUp() {

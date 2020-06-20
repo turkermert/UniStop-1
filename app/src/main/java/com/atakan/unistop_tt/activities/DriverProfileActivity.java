@@ -298,6 +298,7 @@ public class DriverProfileActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         //hide searcView
         menu.findItem(R.id.action_search).setVisible(false);
+        menu.findItem(R.id.action_filter).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
 

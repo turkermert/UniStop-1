@@ -53,7 +53,7 @@ public class ChatActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     ImageView profileIv, blockIv;
-    TextView nameTv, userStatusTv;
+    TextView nameTv;
     EditText messageEt;
     ImageButton sendBtn;
 
@@ -89,7 +89,6 @@ public class ChatActivity extends AppCompatActivity {
         profileIv = findViewById(R.id.profileIv);
         blockIv = findViewById(R.id.blockIv);
         nameTv = findViewById(R.id.nameTv);
-        userStatusTv = findViewById(R.id.userStatusTv);
         messageEt = findViewById(R.id.messageEt);
         sendBtn = findViewById(R.id.sendBtn);
 

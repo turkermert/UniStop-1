@@ -28,6 +28,7 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:scaleType="centerCrop"
+            android:layout_margin="10dp"
             android:src="@drawable/ic_default_img_white"
             app:c_background_color="@color/colorPrimaryDark"/>
 
@@ -47,14 +48,16 @@
                 android:text="Receiver Name"
                 android:textColor="@color/colorWhite"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:layout_marginTop="14dp"/>
             <!--Receiver status (online, offline)-->
             <TextView
                 android:id="@+id/userStatusTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Online"
-                android:textColor="@color/colorWhite"/>
+                android:textColor="@color/colorWhite"
+                android:visibility="invisible"/>
         </LinearLayout>
         <ImageView
             android:layout_marginEnd="5dp"

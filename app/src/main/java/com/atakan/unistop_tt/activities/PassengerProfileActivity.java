@@ -1,5 +1,6 @@
 package com.atakan.unistop_tt.activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,6 +27,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 
 public class PassengerProfileActivity extends AppCompatActivity {
 
@@ -75,6 +79,7 @@ public class PassengerProfileActivity extends AppCompatActivity {
         districtTv = findViewById(R.id.districtTv);
         addressTv = findViewById(R.id.addressTv);
         userTypeTv = findViewById(R.id.userTypeTv);
+        //rateProfileBtn = findViewById(R.id.rateProfileBtn);
 
 
         //get user id from adapter user when user click from user list
@@ -93,17 +98,38 @@ public class PassengerProfileActivity extends AppCompatActivity {
 //        rateProfileBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-//                Intent intent = new Intent(context, RateProfileActivity.class);
-//                context.startActivity(intent);
+//                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//                builder.setTitle("Rate user");
+//                view = getLayoutInflater().inflate(R.layout.dialog_rate_profile, null);
+//
+//                RatingBar ratingBar = view.findViewById(R.id.ratingBar);
+//                ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+//                    @Override
+//                    public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+//
+//
+//                        //Firabase database instance
+//                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//                        //path to store user data named "Users"
+//                        DatabaseReference reference = database.getReference("Ratings");
+//                        //put data within hashmap in db
+//
+//                     if (reference)
+//                        //using hashmap
+//                        HashMap<Object, Float> hashMap = new HashMap<>();
+//                        //put info in hashmap
+//                        hashMap.put(senderUid, v);
+//
+//                        reference.child(receiverUid).setValue(hashMap);
+//
+//                        reference.child(receiverUid).updateChildren(senderUid,v);
+//                    }
+//                });
+//
+//                builder.setView(view);
+//                builder.create().show();
 //            }
 //        });
-
-        /*rateProfileBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showRateProfileDialog();
-            }
-        });*/
 
         //take data from database
         Query query = databaseReferenceUserInfo.orderByChild("uid").equalTo(receiverUid);
@@ -182,60 +208,6 @@ public class PassengerProfileActivity extends AppCompatActivity {
 
     }
 
-   /* private void showRateProfileDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Rate Profile");
-
-        LinearLayout linearLayout = new LinearLayout(this);
-        linearLayout.setGravity(Gravity.CENTER);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-
-        RatingBar ratingBar = new RatingBar(this);
-        ratingBar.setNumStars(5);
-        ratingBar.setStepSize(1);
-
-        Button button = new Button(this);
-        button.setText("Rate");
-
-        linearLayout.addView(ratingBar);
-        linearLayout.addView(button);
-
-        builder.setView(linearLayout);
-
-        builder.create().show();
-
-        //String s = String.valueOf(ratingBar.getRating());
-
-    }*/
-
-//    private void showCarInformation() {
-//        RelativeLayout carProfile = findViewById(R.id.carProfile);
-//        RelativeLayout carInformationRL = new RelativeLayout(this);
-//        TextView carInformationTV = new TextView(this);
-//        carInformationTV.setText("Car Information");
-//        carInformationTV.setTextSize(25);
-//        carInformationTV.setTypeface(null, Typeface.BOLD);
-//        carInformationRL.addView(carInformationTV);
-//
-//
-//        RelativeLayout carInformationTableRL = new RelativeLayout(this);
-//        TableLayout tableLayout = new TableLayout(this);
-//        TableRow modelTR = new TableRow(this);
-//        TextView modelTitleTv = new TextView(this);
-//        modelTitleTv.setText("Brand / Model");
-//        TextView modelTv = new TextView(this);
-//        modelTR.addView(modelTitleTv);
-//        modelTR.addView(modelTv);
-//        tableLayout.addView(modelTR);
-//        carInformationTableRL.addView(tableLayout);
-//
-//        carProfile.addView(carInformationRL);
-//        carProfile.addView(carInformationTableRL);
-//
-//
-//
-//    }
-
 
     private void checkUserStatus(){
         //get current user
@@ -269,8 +241,10 @@ public class PassengerProfileActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         //hide searcView
         menu.findItem(R.id.action_search).setVisible(false);
+        menu.findItem(R.id.action_filter).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
