@@ -37,6 +37,7 @@
             android:name=".activities.ChatActivity"
             android:theme="@style/AppThemeNo" />
         <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.LoginAfterRegisterActivity" />
         <activity android:name=".activities.LessonhourActivity" />
         <activity android:name=".activities.UsertypeActivity" />
         <activity android:name=".activities.CarInformationActivity" />

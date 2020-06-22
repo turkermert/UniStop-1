@@ -167,9 +167,8 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
                     String address = "" + ds.child("address").getValue();
                     String userType = "" + ds.child("usertype").getValue();
                     String image = "" + ds.child("image").getValue();
+                    String email = "" + ds.child("email").getValue();
 
-                    //set usertype's first letter capital
-                    userType = userType.substring(0, 1).toUpperCase() + userType.substring(1).toLowerCase();
 
                     //set data
                     nameTv.setText(name);
@@ -177,9 +176,9 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
                     addressTv.setText(address);
                     userTypeTv.setText(userType);
 
-                    /*String realName=TextUtils.split(email,"@")[0].split("\\.")[1];       //wite name and surname automatically
+                    String realName=TextUtils.split(email,"@")[0].split("\\.")[1];
                     String realSurname=TextUtils.split(email,"@")[0].split("\\.")[0];
-                    emailTv.setText(email+"\n"+realName.substring(0, 1).toUpperCase()+ realName.substring(1)+" "+realSurname.substring(0, 1).toUpperCase()+ realSurname.substring(1));*/
+                    nameTv.setText(realName.substring(0, 1).toUpperCase()+ realName.substring(1)+" "+realSurname.substring(0, 1).toUpperCase()+ realSurname.substring(1));
 
                     try {
                         //if image is received then set
@@ -270,10 +269,10 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
             @Override
             public void onClick(View view) {
 
-                if (userTypeTv.getText().toString().trim().equals("Passenger")){
+                if (userTypeTv.getText().toString().trim().equals("passenger")){
                     showEditProfileDialog();
                 }
-                else if (userTypeTv.getText().toString().trim().equals("Driver")){
+                else if (userTypeTv.getText().toString().trim().equals("driver")){
                     showEditDriverProfileDialog();
                 }
             }

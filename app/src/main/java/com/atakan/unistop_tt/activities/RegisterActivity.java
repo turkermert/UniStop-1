@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,12 +15,14 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atakan.unistop_tt.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -87,20 +91,22 @@ public class RegisterActivity extends AppCompatActivity {
                     mPasswordEt.setFocusable(true);
                 }
                 else if(!passwordAgain.equals(password)){
-                    mPasswordAgain.setError("these passwords are not same.");
+                    mPasswordAgain.setError("These passwords are not same.");
                 }
 
                 //atılım email check condition
 
                 else if(!TextUtils.split(email,"@")[1].equals("student.atilim.edu.tr")){
 
-                    Toast.makeText(getApplicationContext(), "Sadece Atılım e-mail geçerlidir.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "You need to register with Atılım University student e-mail", Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 else{
                     //register the user, write it db with registerUser method
-                    registerUser(email, password);
+                    registerUser(email,password);
+
+
                 }
 
             }
@@ -132,9 +138,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                             FirebaseUser user = mAuth.getCurrentUser();
                             //get user email and uid from auth
-                            String email = user.getEmail();
+                            final String email = user.getEmail();
                             String uid = user.getUid();
-
 
                             //send email authontication
                             sendEmail();
@@ -158,10 +163,10 @@ public class RegisterActivity extends AppCompatActivity {
                             //put data within hashmap in db
                             reference.child(uid).setValue(hashMap);
 
+                            Intent intent = new Intent(context, UsertypeActivity.class);
+                            //intent.putExtra("email", email);
+                            startActivity(intent);
 
-                            Toast.makeText(context, "Registered...\n"+user.getEmail(), Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(context, UsertypeActivity.class));
-                            finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             progressDialog.dismiss();
@@ -187,7 +192,7 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful()){
-                        Toast.makeText(context,"check email for verification",Toast.LENGTH_LONG).show();
+                        Toast.makeText(context,"Check email for verification",Toast.LENGTH_LONG).show();
                     }
                 }
             });

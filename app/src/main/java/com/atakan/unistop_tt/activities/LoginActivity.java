@@ -90,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                 else {
                     //valid email, check it from db
                     loginUser(email, password);
+
                     if(mCheckBoxRemember.isChecked()){
                         Boolean boolIsChecked=mCheckBoxRemember.isChecked();
                         SharedPreferences.Editor editor=mPrefs.edit();
@@ -223,10 +224,16 @@ public class LoginActivity extends AppCompatActivity {
                             //dismiss progress dialog
                             progressDialog.dismiss();
 
-                            // Sign in success, update UI with the signed-in user's information
-                            //Go to other page
-                            startActivity(new Intent(context, DashboardActivity.class));
-                            finish();
+                            if (user.isEmailVerified()){
+                                // Sign in success, update UI with the signed-in user's information
+                                //Go to other page
+                                startActivity(new Intent(context, DashboardActivity.class));
+                                finish();
+                            }
+                            else{
+                                Toast.makeText(context, "Please check your mail", Toast.LENGTH_LONG).show();
+                            }
+
 
                         } else {
                             //dismiss progress dialog
